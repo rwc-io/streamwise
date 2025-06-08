@@ -55,6 +55,10 @@ kotlin {
       implementation(libs.androidx.lifecycle.viewmodel)
       implementation(libs.androidx.lifecycle.runtimeCompose)
       implementation(projects.shared)
+
+      implementation(libs.bignum)
+      implementation(libs.koalaplot.core)
+      implementation(libs.kotlinx.datetime)
     }
     commonTest.dependencies {
       implementation(libs.kotlin.test)

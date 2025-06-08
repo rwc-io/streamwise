@@ -38,6 +38,8 @@ kotlin {
   sourceSets {
     commonMain.dependencies {
       // put your Multiplatform dependencies here
+      implementation(libs.bignum)
+      implementation(libs.kotlinx.datetime)
     }
     commonTest.dependencies {
       implementation(libs.kotlin.test)
