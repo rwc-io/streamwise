@@ -9,6 +9,7 @@ plugins {
   alias(libs.plugins.androidApplication)
   alias(libs.plugins.composeMultiplatform)
   alias(libs.plugins.composeCompiler)
+  alias(libs.plugins.composeHotReload)
 }
 
 kotlin {
@@ -18,6 +19,8 @@ kotlin {
       jvmTarget.set(JvmTarget.JVM_11)
     }
   }
+
+  jvm("desktop")
 
   @OptIn(ExperimentalWasmDsl::class)
   wasmJs {
@@ -40,6 +43,7 @@ kotlin {
   }
 
   sourceSets {
+    val desktopMain by getting
 
     androidMain.dependencies {
       implementation(compose.preview)
@@ -62,6 +66,10 @@ kotlin {
     }
     commonTest.dependencies {
       implementation(libs.kotlin.test)
+    }
+    desktopMain.dependencies {
+      implementation(compose.desktop.currentOs)
+      implementation(libs.kotlinx.coroutinesSwing)
     }
   }
 }
@@ -92,6 +100,19 @@ android {
     targetCompatibility = JavaVersion.VERSION_11
   }
 }
+
+compose.desktop {
+  application {
+    mainClass = "io.rwc.streamwise.MainKt"
+
+    nativeDistributions {
+      targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+      packageName = "io.rwc.streamwise"
+      packageVersion = "1.0.0"
+    }
+  }
+}
+
 
 dependencies {
   debugImplementation(compose.uiTooling)
