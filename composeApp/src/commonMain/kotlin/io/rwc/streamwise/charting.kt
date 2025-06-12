@@ -66,8 +66,8 @@ fun AxisTitle(title: String, modifier: Modifier = Modifier) {
 @OptIn(ExperimentalKoalaPlotApi::class, ExperimentalTime::class)
 @Composable
 @Suppress("MagicNumber")
-fun TimeSamplePlot(balances: List<DailyBalance>, thumbnail: Boolean, title: String) {
-  val data = balances.map { DefaultPoint(it.date, it.balance) }
+fun TimeSamplePlot(balances: Map<LocalDate, BigDecimal>, thumbnail: Boolean, title: String) {
+  val data = balances.map { (date, balance) -> DefaultPoint(date, balance) }
   val yDataMin = data.minOfOrNull { it.y } ?: 0.toBigDecimal()
   val yDataMax = data.maxOfOrNull { it.y } ?: 1.toBigDecimal()
 
