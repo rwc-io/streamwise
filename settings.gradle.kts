@@ -34,3 +34,4 @@ plugins {
 
 include(":server")
 include(":shared")
+include(":webApp")
