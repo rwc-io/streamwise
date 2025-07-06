@@ -5,33 +5,27 @@ import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 
 plugins {
   alias(libs.plugins.kotlinMultiplatform)
-  alias(libs.plugins.androidLibrary)
 }
 
 kotlin {
-  androidTarget {
-    @OptIn(ExperimentalKotlinGradlePluginApi::class)
-    compilerOptions {
-      jvmTarget.set(JvmTarget.JVM_11)
-    }
-  }
-
   jvm()
 
-  @OptIn(ExperimentalWasmDsl::class)
-  wasmJs {
+  js(IR) {
     browser {
-      val rootDirPath = project.rootDir.path
-      val projectDirPath = project.projectDir.path
+      useEsModules()
       commonWebpackConfig {
-        devServer = (devServer ?: KotlinWebpackConfig.DevServer()).apply {
-          static = (static ?: mutableListOf()).apply {
-            // Serve sources to debug inside browser
-            add(rootDirPath)
-            add(projectDirPath)
-          }
+        sourceMaps = false
+      }
+      testTask {
+        useKarma {
+          useChromeHeadless()
         }
       }
+    }
+    binaries.executable()
+    generateTypeScriptDefinitions()
+    compilerOptions {
+      target.set("es2015")
     }
   }
 
@@ -47,14 +41,3 @@ kotlin {
   }
 }
 
-android {
-  namespace = "io.rwc.streamwise.shared"
-  compileSdk = libs.versions.android.compileSdk.get().toInt()
-  compileOptions {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
-  }
-  defaultConfig {
-    minSdk = libs.versions.android.minSdk.get().toInt()
-  }
-}
