@@ -9,6 +9,13 @@ plugins {
   // id("org.jetbrains.kotlinx.atomicfu") version "0.27.0"
 }
 
+// This configures the github node plugin,
+// used to run the angular build tasks
+node {
+  version = libs.versions.nodejs
+  download = true
+}
+
 version = "1.0.0-SNAPSHOT"
 group = "io.rwc"
 
@@ -70,9 +77,10 @@ kotlin {
   }
 }
 
-node {
-  download = true
-  version = "22.12.0"
+tasks.npmInstall {
+  nodeModulesOutputFilter {
+    exclude("notExistingFile")
+  }
 }
 
 val ngBuild = tasks.register<NpxTask>("buildWebapp") {
