@@ -4,4 +4,5 @@ package kangular.external
 @JsNonModule
 external object AngularCore {
     val signal: dynamic
+    val computed: dynamic
 }

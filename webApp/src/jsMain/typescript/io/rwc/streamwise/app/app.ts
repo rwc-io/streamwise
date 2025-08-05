@@ -2,10 +2,12 @@ import {Component} from '@angular/core';
 import {RouterOutlet} from '@angular/router';
 
 import * as streamwise from '@streamwise';
+import {BaseChartDirective} from "ng2-charts";
 
 @Component({
   templateUrl: './test.component.html',
   standalone: true,
+  imports: [BaseChartDirective],
   selector: 'test-component',
 })
 class TestComponent extends streamwise.TestComponent {
