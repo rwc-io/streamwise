@@ -58,6 +58,7 @@ kotlin {
       implementation(libs.kotlinx.datetime)
 
       implementation(npm("@angular/core", libs.versions.angular.get()))
+      implementation(npm("luxon", libs.versions.luxon.get()))
       implementation(npm("rxjs", libs.versions.rxjs.get()))
 
       // implementation(project.dependencies.platform(libs.firebase.bom))
