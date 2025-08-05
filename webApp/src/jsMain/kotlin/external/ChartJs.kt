@@ -14,7 +14,7 @@ external object ChartJs {
 @JsExport
 class ChartDataset(
   val label: String? = null,
-  val data: ReadonlyArray<Number> = arrayOf(),
+  val data: Array<Any> = arrayOf(),
   val fill: Boolean? = null,
   val borderWidth: Int? = null,
   val backgroundColor: String? = null,

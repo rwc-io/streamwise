@@ -3,6 +3,5 @@
   <button (click)="increment()">Increment</button>
 </div>
 <div>
-  The chart is;
-  <canvas baseChart [data]="barChartData" [options]="barChartOptions" [type]="'line'"> </canvas>
+  <canvas baseChart [data]="chartData()" [options]="barChartOptions" [type]="'line'"> </canvas>
 </div>

@@ -4,7 +4,12 @@ import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import external.ChartData
 import external.ChartDataset
 import external.Luxon
+import io.rwc.streamwise.flows.Fixed
 import kangular.core.Signal
+import kangular.external.AngularCore.computed
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.plus
+import kotlin.random.Random
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
@@ -15,6 +20,39 @@ class TestComponent {
 
   @Suppress("unused")
   val aSignal = aSignalK.ngSignal
+
+  private val balances = Signal(
+    listOf(
+      Fixed(
+        LocalDate(2025, 1, 1),
+        BigDecimal.fromFloat(1000f)
+      ),
+      Fixed(
+        LocalDate(2025, 1, 2),
+        BigDecimal.fromFloat(1200f)
+      ),
+      Fixed(
+        LocalDate(2025, 1, 3),
+        BigDecimal.fromFloat(900f)
+      ),
+    )
+  )
+
+  val chartData = computed {
+    ChartData(
+      labels = balances().map { it.date.toString() }.toTypedArray(),
+      datasets = arrayOf(
+        ChartDataset(
+          label = "Balance",
+          data = balances().map { it.amount.toStringExpanded() }.toTypedArray(),
+          backgroundColor = "#4bc0c0ff",
+          borderWidth = 1,
+          fill = false,
+          borderColor = "#4bc0c0ff"
+        )
+      )
+    )
+  }
 
   val barChartData = ChartData(
     labels = arrayOf(
@@ -61,5 +99,17 @@ class TestComponent {
   fun increment() {
     val x = aSignalK()
     aSignalK.set(x + 1)
+
+    // Add a random balance entry to the end of the balances
+    val oldBalances = balances()
+    val lastDate = oldBalances.maxOfOrNull { it.date }
+    val nextDate = lastDate?.plus(1, kotlinx.datetime.DateTimeUnit.DAY) ?: LocalDate(2025, 1, 4)
+    val nextBalance = Random.nextFloat() * 2000
+    balances.set(
+      oldBalances + Fixed(
+        nextDate,
+        BigDecimal.fromFloat(nextBalance)
+      )
+    )
   }
 }
