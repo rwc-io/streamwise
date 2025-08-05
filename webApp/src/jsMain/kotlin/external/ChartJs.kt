@@ -1,15 +1,5 @@
 package external
 
-import js.array.ReadonlyArray
-
-@JsModule("luxon")
-external object ChartJs {
-  object DateTime {
-    fun local(year: Int, month: Int, day: Int): dynamic
-    fun local(year: Int, month: Int, day: Int, hour: Int, minute: Int, second: Int): dynamic
-  }
-}
-
 @OptIn(ExperimentalJsExport::class, ExperimentalJsCollectionsApi::class)
 @JsExport
 class ChartDataset(
