@@ -71,6 +71,8 @@ class TestComponent {
   fun ngOnInit() {
     println("TestComponent initialized with number: $theNumber")
     BigDecimal.useToStringExpanded = true
+
+    val dataService = StreamFire.dataService
   }
 
   @Suppress("unused")
