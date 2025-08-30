@@ -9,6 +9,15 @@ service cloud.firestore {
       allow read: if true;
       allow write: if false;
     }
+    match /private/{docId} {
+      allow read: if request.auth != null && request.auth.uid == resource.data.ownerUid;
+      allow create: if request.auth != null && request.auth.uid == request.resource.data.ownerUid;
+      allow update: if request.auth != null && request.auth.uid == resource.data.ownerUid
+                    && request.auth.uid == request.resource.data.ownerUid;
+      allow delete: if request.auth != null && request.auth.uid == resource.data.ownerUid;
+
+      allow read, write: if isAdmin();
+    }
     match /{document=**} {
       allow read, write: if isAdmin();
     }

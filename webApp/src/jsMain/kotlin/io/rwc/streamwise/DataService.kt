@@ -12,9 +12,17 @@ data class PublicData(
   val content: String,
 )
 
+@Serializable
+data class PrivateData(
+  val id: String,
+  val content: String,
+)
+
 class DataService {
   val db: FirebaseFirestore = StreamFire.firestore
   var publicCollector: kotlinx.coroutines.Job? = null
+  var privateCollector: kotlinx.coroutines.Job? = null
+  var authWatcher: kotlinx.coroutines.Job? = null
 
   init {
     val publicFlow = db.collection("public").snapshots
@@ -30,9 +38,44 @@ class DataService {
         println("Public collection flow completed")
       }
     }
+
+    // When auth changes, we need to re-query based on new auth
+    val authFlow = StreamFire.auth.authStateChanged
+    authWatcher = CoroutineScope(Dispatchers.Main).launch {
+      authFlow.collect {
+        removeAuthedListeners()
+
+        if (it == null) {
+          return@collect
+        }
+
+        val privateFlow =
+          db.collection("private").where { "ownerUid" equalTo StreamFire.auth.currentUser?.uid }.snapshots
+
+        privateCollector = CoroutineScope(Dispatchers.Main).launch {
+          try {
+            privateFlow.collect { snapshot ->
+              println("Private collection changed: ${snapshot.documents.size} documents")
+              for (doc in snapshot.documents) {
+                println("Private doc: ${doc.id} => ${doc.data(PrivateData.serializer())}")
+              }
+            }
+          } finally {
+            println("Private collection flow completed")
+          }
+        }
+      }
+    }
+  }
+
+  fun removeAuthedListeners() {
+    privateCollector?.cancel()
+    privateCollector = null
   }
 
   fun cleanup() {
+    removeAuthedListeners()
     publicCollector?.cancel()
+    authWatcher?.cancel()
   }
 }
