@@ -12,9 +12,7 @@ import {TestComponent} from "./components/test.component";
 })
 export class App {
   protected title = 'streamwise';
-  protected num = "";
 
   constructor() {
-    this.num = streamwise.testFunction()
   }
 }
