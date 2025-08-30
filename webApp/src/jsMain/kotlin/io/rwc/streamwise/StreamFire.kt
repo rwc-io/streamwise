@@ -17,6 +17,7 @@ class StreamFire {
     val firestore: FirebaseFirestore
     val auth: FirebaseAuth
 
+    val authService: AuthService
     val dataService: DataService
 
     init {
@@ -40,6 +41,7 @@ class StreamFire {
         connectFirestoreEmulator(firestore.js, "localhost", 8080)
       }
 
+      authService = AuthService()
       dataService = DataService()
 
       /*CoroutineScope(Dispatchers.Main).launch {

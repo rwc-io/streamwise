@@ -1,0 +1,6 @@
+@if (authedUser() != null) {
+  <div>Welcome, {{ authedUser()?.email }}!</div>
+  <button (click)="logout()">Log Out</button>
+} @else {
+  <button (click)="login()">Log In</button>
+}

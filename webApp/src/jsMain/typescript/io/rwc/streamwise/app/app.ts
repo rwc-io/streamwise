@@ -3,10 +3,13 @@ import {RouterOutlet} from '@angular/router';
 
 import * as streamwise from '@streamwise';
 import {TestComponent} from "./components/test.component";
+import {AuthComponent} from "./components/auth.component";
+
+streamwise.checkAuthRedirectResult()
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, TestComponent],
+  imports: [RouterOutlet, AuthComponent, TestComponent],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
