@@ -77,18 +77,16 @@ class TestComponent {
   @Suppress("unused")
   fun increment() {
     val x = aSignalK()
-    aSignalK.set(x + 1)
+    aSignalK.value = x + 1
 
     // Add a random balance entry to the end of the balances
     val oldBalances = balances()
     val lastDate = oldBalances.maxOfOrNull { it.date }
     val nextDate = lastDate?.plus(1, kotlinx.datetime.DateTimeUnit.DAY) ?: LocalDate(2025, 1, 4)
     val nextBalance = Random.nextFloat() * 2000
-    balances.set(
-      oldBalances + Fixed(
-        nextDate,
-        BigDecimal.fromFloat(nextBalance)
-      )
+    balances.value = oldBalances + Fixed(
+      nextDate,
+      BigDecimal.fromFloat(nextBalance)
     )
   }
 }

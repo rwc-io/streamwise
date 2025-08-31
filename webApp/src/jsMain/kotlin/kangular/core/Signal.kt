@@ -9,7 +9,7 @@ import kangular.external.AngularCore
  */
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-class Signal<T>(val initialValue: T) {
+class Signal<T>(initialValue: T) {
   val ngSignal: dynamic = AngularCore.signal(initialValue)
 
   // Note that this only applies in Kotlin.
@@ -19,7 +19,7 @@ class Signal<T>(val initialValue: T) {
     return ngSignal()
   }
 
-  fun set(value: T) {
-    ngSignal.set(value)
-  }
+  var value: T
+    get() = ngSignal()
+    set(value) = ngSignal.set(value)
 }

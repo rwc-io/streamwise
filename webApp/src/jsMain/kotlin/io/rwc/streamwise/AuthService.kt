@@ -22,10 +22,10 @@ class AuthService {
       authFlow.collect { newState ->
         if (newState == null) {
           println("User is signed out")
-          currentAuth.set(null)
+          currentAuth.value = null
         } else {
           println("${newState.uid} is signed in")
-          currentAuth.set(newState)
+          currentAuth.value = newState
         }
       }
     }
