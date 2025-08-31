@@ -20,6 +20,11 @@ class TestComponent {
   @Suppress("unused")
   val aSignal = aSignalK.ngSignal
 
+  private val dataService = StreamFire.dataService
+
+  @Suppress("unused")
+  val flowBundles = dataService.flowBundles
+
   private val balances = Signal(
     listOf(
       Fixed(

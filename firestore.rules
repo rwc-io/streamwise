@@ -18,6 +18,20 @@ service cloud.firestore {
 
       allow read, write: if isAdmin();
     }
+    match /flowBundles/{docId} {
+      // Allow reads by owner
+      allow read: if request.auth.uid == resource.data.ownerUid;
+
+      // Allow creation if the current user owns the new document
+      allow create: if request.auth.uid == request.resource.data.ownerUid;
+      // Allow updates by the owner, and prevent change of ownership
+      allow update: if request.auth.uid == request.resource.data.ownerUid
+                    && request.auth.uid == resource.data.ownerUid;
+      // Allow deletion if the current user owns the existing document
+      allow delete: if request.auth.uid == resource.data.ownerUid;
+
+      allow read, write: if isAdmin();
+    }
     match /{document=**} {
       allow read, write: if isAdmin();
     }

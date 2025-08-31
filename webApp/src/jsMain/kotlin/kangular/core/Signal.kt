@@ -6,6 +6,7 @@ import kangular.external.AngularCore
  * A typed wrapper for Angular's signals.
  * Should we be generating types from the typescript definitions?
  * I don't think that works, b/c we can't re-type the call signature (??)
+ * But that means that the underlying js signal is untyped :-/
  */
 @OptIn(ExperimentalJsExport::class)
 @JsExport

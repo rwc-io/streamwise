@@ -1,6 +1,8 @@
 package io.rwc.streamwise
 
 import dev.gitlive.firebase.firestore.FirebaseFirestore
+import io.rwc.streamwise.flows.FlowBundle
+import kangular.core.Signal
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -23,6 +25,9 @@ class DataService {
   var publicCollector: kotlinx.coroutines.Job? = null
   var privateCollector: kotlinx.coroutines.Job? = null
   var authWatcher: kotlinx.coroutines.Job? = null
+
+  var flowBundles = Signal<Array<FlowBundle>>(emptyArray())
+  var flowBundlesCollector: kotlinx.coroutines.Job? = null
 
   init {
     val publicFlow = db.collection("public").snapshots
@@ -64,6 +69,24 @@ class DataService {
             println("Private collection flow completed")
           }
         }
+
+        val flowBundlesFlow =
+          db.collection("flowBundles").where { "ownerUid" equalTo StreamFire.auth.currentUser?.uid }.snapshots
+
+        flowBundlesCollector = CoroutineScope(Dispatchers.Main).launch {
+          try {
+            flowBundlesFlow.collect { snapshot ->
+              println("flowBundles collection changed: ${snapshot.documents.size} documents")
+              val bundles = snapshot.documents.map { doc ->
+                val bundle = doc.data(FlowBundle.serializer())
+                bundle.copy(id = doc.id)
+              }
+              flowBundles.value = bundles.toTypedArray()
+            }
+          } finally {
+            println("flowBundles collection flow completed")
+          }
+        }
       }
     }
   }
@@ -71,6 +94,8 @@ class DataService {
   fun removeAuthedListeners() {
     privateCollector?.cancel()
     privateCollector = null
+    flowBundlesCollector?.cancel()
+    flowBundlesCollector = null
   }
 
   fun cleanup() {
