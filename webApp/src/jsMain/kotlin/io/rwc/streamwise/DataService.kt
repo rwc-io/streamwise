@@ -22,12 +22,12 @@ data class PrivateData(
 
 class DataService {
   val db: FirebaseFirestore = StreamFire.firestore
-  var publicCollector: kotlinx.coroutines.Job? = null
-  var privateCollector: kotlinx.coroutines.Job? = null
-  var authWatcher: kotlinx.coroutines.Job? = null
+  private var publicCollector: kotlinx.coroutines.Job? = null
+  private var privateCollector: kotlinx.coroutines.Job? = null
+  private var authWatcher: kotlinx.coroutines.Job? = null
 
   var flowBundles = Signal<Array<FlowBundle>>(emptyArray())
-  var flowBundlesCollector: kotlinx.coroutines.Job? = null
+  private var flowBundlesCollector: kotlinx.coroutines.Job? = null
 
   init {
     val publicFlow = db.collection("public").snapshots
