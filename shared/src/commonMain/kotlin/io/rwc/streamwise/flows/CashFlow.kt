@@ -10,16 +10,6 @@ interface CashFlow {
   fun valueOn(date: LocalDate): BigDecimal
 }
 
-data class Fixed(val date: LocalDate, val amount: BigDecimal) : CashFlow {
-  override fun valueOn(date: LocalDate): BigDecimal {
-    return if (this@Fixed.date == date) {
-      amount
-    } else {
-      0.toBigDecimal()
-    }
-  }
-}
-
 fun reifyFlows(flows: List<CashFlow>, startDate: LocalDate, endDate: LocalDate): List<Fixed> {
   val cashFlow = mutableListOf<Fixed>()
 
