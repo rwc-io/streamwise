@@ -1,7 +1,7 @@
 package io.rwc.streamwise.flows
 
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
-import com.ionspin.kotlin.bignum.serialization.kotlinx.bigdecimal.BigDecimalArraySerializer
+import com.ionspin.kotlin.bignum.serialization.kotlinx.bigdecimal.BigDecimalHumanReadableSerializer
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.YearMonth
 import kotlinx.datetime.yearMonth
@@ -20,7 +20,7 @@ import kotlin.math.abs
 data class Monthly(
   val name: String,
   private val dayOffset: Int,
-  @Serializable(with = BigDecimalArraySerializer::class)
+  @Serializable(with = BigDecimalHumanReadableSerializer::class)
   private val value: BigDecimal,
 ) : CashFlow {
   init {
