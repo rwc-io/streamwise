@@ -1,12 +1,20 @@
 package io.rwc.streamwise
 
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
+import com.ionspin.kotlin.bignum.decimal.toBigDecimal
 import external.ChartData
 import external.ChartDataset
 import io.rwc.streamwise.flows.Fixed
-import io.rwc.streamwise.flows.makeSomeBalances
+import io.rwc.streamwise.flows.accumulateFlows
 import kangular.core.Computed
 import kangular.core.Signal
+import kangular.external.AngularCore.effect
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.plus
 import kotlin.random.Random
@@ -26,8 +34,11 @@ class TestComponent {
   @Suppress("unused")
   val flowBundles = dataService.flowBundles
 
+  private val startDate = LocalDate(2025, 1, 1)
+  private val endDate = LocalDate(2025, 12, 31)
+
   private val balances = Signal(
-    makeSomeBalances(LocalDate(2025, 1, 1), LocalDate(2025, 7, 1))
+    listOf<Fixed>()
   )
 
   @Suppress("unused")
@@ -62,9 +73,51 @@ class TestComponent {
     )
   )
 
+  private var monthlysCollector: Job? = null
+
   @Suppress("unused")
   fun ngOnInit() {
     BigDecimal.useToStringExpanded = true
+  }
+
+  init {
+    effect {
+      val bundles = flowBundles()
+      monthlysCollector?.cancel()
+      monthlysCollector = null
+
+      console.log("Recomputing balances")
+
+      val db = StreamFire.dataService.db
+
+      val allMonthlys = combine(bundles.map { bundle ->
+        val doc = db.collection("flowBundles").document(bundle.id).collection("monthlyFlows")
+        doc.snapshots
+      }) { snapshotsArray ->
+        snapshotsArray.flatMap { snapshot ->
+          snapshot.documents.mapNotNull { doc ->
+            try {
+              doc.data(io.rwc.streamwise.flows.Monthly.serializer())
+            } catch (e: Exception) {
+              console.error("Error deserializing Monthly from doc ${doc.id}: $e. Cause: $e.cause")
+              null
+            }
+          }
+        }
+      }
+
+      monthlysCollector = CoroutineScope(Dispatchers.Main).launch {
+        allMonthlys.collectLatest { monthlys ->
+          balances.value = accumulateFlows(monthlys, startDate, endDate, 0.toBigDecimal())
+        }
+      }
+    }
+  }
+
+  @Suppress("unused")
+  fun ngOnDestroy() {
+    monthlysCollector?.cancel()
+    monthlysCollector = null
   }
 
   @Suppress("unused")

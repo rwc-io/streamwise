@@ -18,7 +18,7 @@ service cloud.firestore {
 
       allow read, write: if isAdmin();
     }
-    match /flowBundles/{docId} {
+    match /flowBundles/{bundleId} {
       // Allow reads by owner
       allow read: if request.auth.uid == resource.data.ownerUid;
 
@@ -31,6 +31,11 @@ service cloud.firestore {
       allow delete: if request.auth.uid == resource.data.ownerUid;
 
       allow read, write: if isAdmin();
+
+      match /monthlyFlows/{monthlyFlowId} {
+        // Allow reads by owner
+        allow read, write: if get(/databases/(default)/documents/flowBundles/$(bundleId)).data.ownerUid == request.auth.uid;
+      }
     }
     match /{document=**} {
       allow read, write: if isAdmin();
