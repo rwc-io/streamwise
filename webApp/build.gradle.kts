@@ -55,13 +55,16 @@ kotlin {
     jsMain.dependencies {
       implementation(libs.kotlinwrappers.kotlinJs)
       implementation(libs.kotlin.stdlib.js)
+      implementation(libs.kotlinx.coroutines)
       implementation(libs.kotlinx.datetime)
 
       implementation(npm("@angular/core", libs.versions.angular.get()))
+      implementation(npm("@firebase/app", libs.versions.firebase.app.get()))
+      implementation(npm("@firebase/auth", libs.versions.firebase.auth.get()))
       implementation(npm("rxjs", libs.versions.rxjs.get()))
 
-      // implementation(project.dependencies.platform(libs.firebase.bom))
-      // implementation(libs.firebase.sdk.auth)
+      implementation(libs.gitlive.firebase.auth)
+      implementation(libs.gitlive.firebase.firestore)
 
       implementation(libs.bignum)
 

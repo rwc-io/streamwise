@@ -1,0 +1,4 @@
+export FIREBASE_PROJECT_ID=a-project
+export FIREBASE_APP_ID=an-app
+export FIREBASE_API_KEY=a-key
+export FIREBASE_AUTH_DOMAIN=a-domain

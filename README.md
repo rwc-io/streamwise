@@ -25,3 +25,31 @@ channel [#compose-web](https://slack-chats.kotlinlang.org/c/compose-web).
 If you face any issues, please report them on [YouTrack](https://youtrack.jetbrains.com/newIssue?project=CMP).
 
 You can open the web application by running the `:composeApp:wasmJsBrowserDevelopmentRun` Gradle task.
+
+## Build instructions
+
+### Environment
+
+Copy `.envrc.template` into `.envrc` and fill in the values from your FIrebase configuration. (Make sure you have direnv installed, or set the environment variables some other way.)
+
+Next, run `write-firebase-config.sh`, it will create config files with the values from the environment.
+
+### Build
+
+TBD
+
+### Run the firebase emulator
+
+Make sure you followed the environment steps above.
+
+Run:
+
+```sh
+./emulate.sh
+```
+
+The emulator will maintain state in between runs (by reading/writing to a gitignore'd file).
+
+### Serve the web app
+
+TBD

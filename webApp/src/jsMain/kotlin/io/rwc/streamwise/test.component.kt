@@ -37,6 +37,7 @@ class TestComponent {
     )
   )
 
+  @Suppress("unused")
   val chartData = computed {
     ChartData(
       labels = balances().map { it.date.toString() }.toTypedArray(),
@@ -53,6 +54,7 @@ class TestComponent {
     )
   }
 
+  @Suppress("unused")
   val barChartOptions = jsObjectOf(
     "scales" to jsObjectOf(
       "x" to timeAxisX,
@@ -69,7 +71,6 @@ class TestComponent {
 
   @Suppress("unused")
   fun ngOnInit() {
-    println("TestComponent initialized with number: $theNumber")
     BigDecimal.useToStringExpanded = true
   }
 
