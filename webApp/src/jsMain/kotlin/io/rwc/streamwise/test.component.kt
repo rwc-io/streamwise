@@ -4,8 +4,9 @@ import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import external.ChartData
 import external.ChartDataset
 import io.rwc.streamwise.flows.Fixed
+import io.rwc.streamwise.flows.makeSomeBalances
+import kangular.core.Computed
 import kangular.core.Signal
-import kangular.external.AngularCore.computed
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.plus
 import kotlin.random.Random
@@ -26,24 +27,11 @@ class TestComponent {
   val flowBundles = dataService.flowBundles
 
   private val balances = Signal(
-    listOf(
-      Fixed(
-        LocalDate(2025, 1, 1),
-        BigDecimal.fromFloat(1000f)
-      ),
-      Fixed(
-        LocalDate(2025, 1, 2),
-        BigDecimal.fromFloat(1200f)
-      ),
-      Fixed(
-        LocalDate(2025, 1, 3),
-        BigDecimal.fromFloat(900f)
-      ),
-    )
+    makeSomeBalances(LocalDate(2025, 1, 1), LocalDate(2025, 7, 1))
   )
 
   @Suppress("unused")
-  val chartData = computed {
+  val chartData = Computed {
     ChartData(
       labels = balances().map { it.date.toString() }.toTypedArray(),
       datasets = arrayOf(
@@ -56,7 +44,7 @@ class TestComponent {
           borderColor = "#4bc0c0ff"
         )
       )
-    )
+    ).toJs()
   }
 
   @Suppress("unused")

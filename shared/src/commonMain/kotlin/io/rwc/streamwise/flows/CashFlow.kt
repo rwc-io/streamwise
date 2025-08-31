@@ -23,7 +23,7 @@ fun reifyFlows(flows: List<CashFlow>, startDate: LocalDate, endDate: LocalDate):
   return cashFlow
 }
 
-fun makeSomeBalances(startDate: LocalDate, endDate: LocalDate): Map<LocalDate, BigDecimal> {
+fun makeSomeBalances(startDate: LocalDate, endDate: LocalDate): List<Fixed> {
   val flows = listOf(
     Fixed(LocalDate(2023, 1, 1), 1000.toBigDecimal()),
     Monthly("ebmud", 5, (-100).toBigDecimal()),
@@ -35,8 +35,8 @@ fun makeSomeBalances(startDate: LocalDate, endDate: LocalDate): Map<LocalDate, B
 
   val cash = reifyFlows(flows, startDate, endDate)
   var runningTotal = 0.toBigDecimal()
-  return cash.associate {
+  return cash.sortedBy { it.date }.map {
     runningTotal += it.amount
-    it.date to runningTotal
+    Fixed(date = it.date,runningTotal)
   }
 }
