@@ -14,5 +14,6 @@ jq -n \
   --arg FIREBASE_API_KEY "$FIREBASE_API_KEY" \
   --arg FIREBASE_AUTH_DOMAIN "$FIREBASE_AUTH_DOMAIN" \
   --arg FIREBASE_MESSAGING_SENDER_ID "$FIREBASE_MESSAGING_SENDER_ID" \
+  --arg FIREBASE_USE_EMULATORS "$FIREBASE_USE_EMULATORS" \
   -f webApp/src/jsMain/resources/firebase-config.json.jq \
   > webApp/src/jsMain/resources/firebase-config.json

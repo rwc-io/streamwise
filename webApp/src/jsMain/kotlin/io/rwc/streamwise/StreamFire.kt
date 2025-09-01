@@ -21,10 +21,9 @@ class StreamFire {
     val dataService: DataService
 
     init {
-      val useEmulators = true
-
       val opts = js("Object.entries(require('./firebase-config.json'))").unsafeCast<Array<Array<dynamic>>>()
         .associate { (key, value) -> key.toString() to value.toString() }
+      val useEmulators = opts["useEmulators"].toBoolean()
       val options = FirebaseOptions(
         applicationId = opts["applicationId"] ?: "unknown-app-id",
         projectId = opts["projectId"] ?: "unknown-project-id",
@@ -37,6 +36,7 @@ class StreamFire {
       auth = Firebase.auth
 
       if (useEmulators) {
+        console.log("Using emulators")
         connectAuthEmulator(auth.js, "http://localhost:9099")
         connectFirestoreEmulator(firestore.js, "localhost", 8080)
       }
