@@ -5,19 +5,6 @@ service cloud.firestore {
     function isAdmin() {
       return get(/databases/(default)/documents/users/$(request.auth.uid)).data.admin == true;
     }
-    match /public/{docId} {
-      allow read: if true;
-      allow write: if false;
-    }
-    match /private/{docId} {
-      allow read: if request.auth != null && request.auth.uid == resource.data.ownerUid;
-      allow create: if request.auth != null && request.auth.uid == request.resource.data.ownerUid;
-      allow update: if request.auth != null && request.auth.uid == resource.data.ownerUid
-                    && request.auth.uid == request.resource.data.ownerUid;
-      allow delete: if request.auth != null && request.auth.uid == resource.data.ownerUid;
-
-      allow read, write: if isAdmin();
-    }
     match /flowBundles/{bundleId} {
       // Allow reads by owner
       allow read: if request.auth.uid == resource.data.ownerUid;

@@ -42,11 +42,7 @@ fun checkAuthRedirectResult() {
   val auth = StreamFire.auth
   getRedirectResult(auth.js).then { result ->
     if (result != null) {
-      val user = result.user
-      println("Redirect sign-in successful: ${user.email}")
-      auth.js.updateCurrentUser(user)
-    } else {
-      println("No redirect sign-in result")
+      println("Processed sign-in redirect result for user ${result.user.uid}")
     }
   }.catch { error ->
     println("Error during redirect sign-in: $error")

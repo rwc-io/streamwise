@@ -8,19 +8,10 @@ import kangular.core.Computed
 import kangular.core.Signal
 import kangular.external.AngularCore.effect
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.plus
-import kotlin.random.Random
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
 class TestComponent {
-  private val theNumber = BigDecimal.fromFloat(4.2f)
-
-  private val aSignalK = Signal(theNumber)
-
-  @Suppress("unused")
-  val aSignal = aSignalK.ngSignal
-
   private val dataService = StreamFire.dataService
 
   @Suppress("unused")
@@ -72,6 +63,11 @@ class TestComponent {
     BigDecimal.useToStringExpanded = true
   }
 
+  @Suppress("unused")
+  fun ngOnDestroy() {
+    flowBundleService.stop()
+  }
+
   init {
     effect {
       console.log("Recomputing balances")
@@ -82,26 +78,5 @@ class TestComponent {
         endDate = endDate,
       )
     }
-  }
-
-  @Suppress("unused")
-  fun ngOnDestroy() {
-    flowBundleService.stop()
-  }
-
-  @Suppress("unused")
-  fun increment() {
-    val x = aSignalK()
-    aSignalK.value = x + 1
-
-    // Add a random balance entry to the end of the balances
-    val oldBalances = balances()
-    val lastDate = oldBalances.maxOfOrNull { it.date }
-    val nextDate = lastDate?.plus(1, kotlinx.datetime.DateTimeUnit.DAY) ?: LocalDate(2025, 1, 4)
-    val nextBalance = Random.nextFloat() * 2000
-    balances.value = oldBalances + Fixed(
-      nextDate,
-      BigDecimal.fromFloat(nextBalance)
-    )
   }
 }
