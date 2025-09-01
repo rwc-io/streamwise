@@ -1,4 +1,4 @@
-import {Component} from "@angular/core";
+import {Component, effect} from "@angular/core";
 import {BaseChartDirective} from "ng2-charts";
 
 import * as streamwise from '@streamwise';
@@ -12,6 +12,10 @@ import * as streamwise from '@streamwise';
 class TestComponent extends streamwise.TestComponent {
   constructor() {
     super()
+
+    effect(() => {
+      this.effecter()
+    });
   }
 }
 

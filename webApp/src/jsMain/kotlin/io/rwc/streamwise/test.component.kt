@@ -68,15 +68,18 @@ class TestComponent {
     flowBundleService.stop()
   }
 
-  init {
-    effect {
-      console.log("Recomputing balances")
-      flowBundleService.start(
-        targetBalances = balances,
-        bundlesSignal = flowBundles,
-        startDate = startDate,
-        endDate = endDate,
-      )
-    }
+  // It seems we can't use `effect` directly in a constructor.
+  // Even though we're supposed to be able to as a superclass.
+  // If we call effect in init, we get this error:
+  // NG0203: inject() must be called from an injection context
+  @Suppress("unused")
+  val effecter = {
+    console.log("Recomputing balances")
+    flowBundleService.start(
+      targetBalances = balances,
+      bundlesSignal = flowBundles,
+      startDate = startDate,
+      endDate = endDate,
+    )
   }
 }
