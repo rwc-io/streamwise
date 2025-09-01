@@ -4,41 +4,30 @@ import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import external.ChartData
 import external.ChartDataset
 import io.rwc.streamwise.flows.Fixed
+import kangular.core.Computed
 import kangular.core.Signal
-import kangular.external.AngularCore.computed
+import kangular.external.AngularCore.effect
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.plus
-import kotlin.random.Random
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
 class TestComponent {
-  private val theNumber = BigDecimal.fromFloat(4.2f)
-
-  private val aSignalK = Signal(theNumber)
+  private val dataService = StreamFire.dataService
 
   @Suppress("unused")
-  val aSignal = aSignalK.ngSignal
+  val flowBundles = dataService.flowBundles
+
+  private val startDate = LocalDate(2025, 1, 1)
+  private val endDate = LocalDate(2025, 12, 31)
 
   private val balances = Signal(
-    listOf(
-      Fixed(
-        LocalDate(2025, 1, 1),
-        BigDecimal.fromFloat(1000f)
-      ),
-      Fixed(
-        LocalDate(2025, 1, 2),
-        BigDecimal.fromFloat(1200f)
-      ),
-      Fixed(
-        LocalDate(2025, 1, 3),
-        BigDecimal.fromFloat(900f)
-      ),
-    )
+    listOf<Fixed>()
   )
 
+  private val flowBundleService = FlowBundleService()
+
   @Suppress("unused")
-  val chartData = computed {
+  val chartData = Computed {
     ChartData(
       labels = balances().map { it.date.toString() }.toTypedArray(),
       datasets = arrayOf(
@@ -51,7 +40,7 @@ class TestComponent {
           borderColor = "#4bc0c0ff"
         )
       )
-    )
+    ).toJs()
   }
 
   @Suppress("unused")
@@ -75,20 +64,19 @@ class TestComponent {
   }
 
   @Suppress("unused")
-  fun increment() {
-    val x = aSignalK()
-    aSignalK.set(x + 1)
+  fun ngOnDestroy() {
+    flowBundleService.stop()
+  }
 
-    // Add a random balance entry to the end of the balances
-    val oldBalances = balances()
-    val lastDate = oldBalances.maxOfOrNull { it.date }
-    val nextDate = lastDate?.plus(1, kotlinx.datetime.DateTimeUnit.DAY) ?: LocalDate(2025, 1, 4)
-    val nextBalance = Random.nextFloat() * 2000
-    balances.set(
-      oldBalances + Fixed(
-        nextDate,
-        BigDecimal.fromFloat(nextBalance)
+  init {
+    effect {
+      console.log("Recomputing balances")
+      flowBundleService.start(
+        targetBalances = balances,
+        bundlesSignal = flowBundles,
+        startDate = startDate,
+        endDate = endDate,
       )
-    )
+    }
   }
 }

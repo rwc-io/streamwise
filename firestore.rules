@@ -5,18 +5,29 @@ service cloud.firestore {
     function isAdmin() {
       return get(/databases/(default)/documents/users/$(request.auth.uid)).data.admin == true;
     }
-    match /public/{docId} {
-      allow read: if true;
-      allow write: if false;
-    }
-    match /private/{docId} {
-      allow read: if request.auth != null && request.auth.uid == resource.data.ownerUid;
-      allow create: if request.auth != null && request.auth.uid == request.resource.data.ownerUid;
-      allow update: if request.auth != null && request.auth.uid == resource.data.ownerUid
-                    && request.auth.uid == request.resource.data.ownerUid;
-      allow delete: if request.auth != null && request.auth.uid == resource.data.ownerUid;
+    match /flowBundles/{bundleId} {
+      // Allow reads by owner
+      allow read: if request.auth.uid == resource.data.ownerUid;
+
+      // Allow creation if the current user owns the new document
+      allow create: if request.auth.uid == request.resource.data.ownerUid;
+      // Allow updates by the owner, and prevent change of ownership
+      allow update: if request.auth.uid == request.resource.data.ownerUid
+                    && request.auth.uid == resource.data.ownerUid;
+      // Allow deletion if the current user owns the existing document
+      allow delete: if request.auth.uid == resource.data.ownerUid;
 
       allow read, write: if isAdmin();
+
+      match /fixedFlows/{monthlyFlowId} {
+        // Allow reads by owner
+        allow read, write: if get(/databases/(default)/documents/flowBundles/$(bundleId)).data.ownerUid == request.auth.uid;
+      }
+
+      match /monthlyFlows/{monthlyFlowId} {
+        // Allow reads by owner
+        allow read, write: if get(/databases/(default)/documents/flowBundles/$(bundleId)).data.ownerUid == request.auth.uid;
+      }
     }
     match /{document=**} {
       allow read, write: if isAdmin();

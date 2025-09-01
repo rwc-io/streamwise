@@ -6,10 +6,11 @@ import kangular.external.AngularCore
  * A typed wrapper for Angular's signals.
  * Should we be generating types from the typescript definitions?
  * I don't think that works, b/c we can't re-type the call signature (??)
+ * But that means that the underlying js signal is untyped :-/
  */
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-class Signal<T>(val initialValue: T) {
+class Signal<T>(initialValue: T) {
   val ngSignal: dynamic = AngularCore.signal(initialValue)
 
   // Note that this only applies in Kotlin.
@@ -19,7 +20,7 @@ class Signal<T>(val initialValue: T) {
     return ngSignal()
   }
 
-  fun set(value: T) {
-    ngSignal.set(value)
-  }
+  var value: T
+    get() = ngSignal()
+    set(value) = ngSignal.set(value)
 }

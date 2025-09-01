@@ -5,6 +5,7 @@ import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 
 plugins {
   alias(libs.plugins.kotlinMultiplatform)
+  alias(libs.plugins.serialization)
 }
 
 kotlin {
@@ -33,7 +34,10 @@ kotlin {
     commonMain.dependencies {
       // put your Multiplatform dependencies here
       implementation(libs.bignum)
+      implementation(libs.bignum.serialization)
       implementation(libs.kotlinx.datetime)
+      implementation(libs.kotlinx.serialization.json)
+
     }
     commonTest.dependencies {
       implementation(libs.kotlin.test)

@@ -1,44 +1,20 @@
 package io.rwc.streamwise
 
 import dev.gitlive.firebase.firestore.FirebaseFirestore
+import io.rwc.streamwise.flows.FlowBundle
+import kangular.core.Signal
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.serialization.Serializable
-
-@Serializable
-data class PublicData(
-  val id: String,
-  val content: String,
-)
-
-@Serializable
-data class PrivateData(
-  val id: String,
-  val content: String,
-)
 
 class DataService {
   val db: FirebaseFirestore = StreamFire.firestore
-  var publicCollector: kotlinx.coroutines.Job? = null
-  var privateCollector: kotlinx.coroutines.Job? = null
-  var authWatcher: kotlinx.coroutines.Job? = null
+  private var authWatcher: kotlinx.coroutines.Job? = null
+
+  var flowBundles = Signal<Array<FlowBundle>>(emptyArray())
+  private var flowBundlesCollector: kotlinx.coroutines.Job? = null
 
   init {
-    val publicFlow = db.collection("public").snapshots
-    publicCollector = CoroutineScope(Dispatchers.Main).launch {
-      try {
-        publicFlow.collect { snapshot ->
-          println("Public collection changed: ${snapshot.documents.size} documents")
-          for (doc in snapshot.documents) {
-            println("Document: ${doc.id} => ${doc.data(PublicData.serializer())}")
-          }
-        }
-      } finally {
-        println("Public collection flow completed")
-      }
-    }
-
     // When auth changes, we need to re-query based on new auth
     val authFlow = StreamFire.auth.authStateChanged
     authWatcher = CoroutineScope(Dispatchers.Main).launch {
@@ -49,19 +25,20 @@ class DataService {
           return@collect
         }
 
-        val privateFlow =
-          db.collection("private").where { "ownerUid" equalTo StreamFire.auth.currentUser?.uid }.snapshots
+        val flowBundlesFlow =
+          db.collection("flowBundles").where { "ownerUid" equalTo StreamFire.auth.currentUser?.uid }.snapshots
 
-        privateCollector = CoroutineScope(Dispatchers.Main).launch {
+        flowBundlesCollector = CoroutineScope(Dispatchers.Main).launch {
           try {
-            privateFlow.collect { snapshot ->
-              println("Private collection changed: ${snapshot.documents.size} documents")
-              for (doc in snapshot.documents) {
-                println("Private doc: ${doc.id} => ${doc.data(PrivateData.serializer())}")
+            flowBundlesFlow.collect { snapshot ->
+              val bundles = snapshot.documents.map { doc ->
+                val bundle = doc.data(FlowBundle.serializer())
+                bundle.copy(id = doc.id)
               }
+              flowBundles.value = bundles.toTypedArray()
             }
           } finally {
-            println("Private collection flow completed")
+            println("flowBundles collection flow completed")
           }
         }
       }
@@ -69,13 +46,12 @@ class DataService {
   }
 
   fun removeAuthedListeners() {
-    privateCollector?.cancel()
-    privateCollector = null
+    flowBundlesCollector?.cancel()
+    flowBundlesCollector = null
   }
 
   fun cleanup() {
     removeAuthedListeners()
-    publicCollector?.cancel()
     authWatcher?.cancel()
   }
 }

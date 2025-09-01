@@ -1,9 +1,11 @@
 package io.rwc.streamwise.flows
 
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
+import com.ionspin.kotlin.bignum.serialization.kotlinx.bigdecimal.BigDecimalHumanReadableSerializer
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.YearMonth
 import kotlinx.datetime.yearMonth
+import kotlinx.serialization.Serializable
 import kotlin.math.abs
 
 
@@ -12,9 +14,15 @@ import kotlin.math.abs
  *
  * @param dayOffset The day offset (1-indexed). If positive, it's the day from the start of the month.
  *                  If negative, it's the day from the end of the month.
- * @param value The value of the cash flow.
+ * @param amount The value of the cash flow.
  */
-class Monthly(val name: String, private val dayOffset: Int, private val value: BigDecimal) : CashFlow {
+@Serializable
+data class Monthly(
+  val name: String,
+  private val dayOffset: Int,
+  @Serializable(with = BigDecimalHumanReadableSerializer::class)
+  private val amount: BigDecimal,
+) : CashFlow {
   init {
     require(dayOffset != 0) { "Day offset cannot be zero" }
     require(abs(dayOffset) <= 31) { "Day offset can't be longer than a month" }
@@ -24,7 +32,7 @@ class Monthly(val name: String, private val dayOffset: Int, private val value: B
     val targetDay = calculateTargetDay(date.yearMonth)
 
     return if (date.day == targetDay) {
-      value
+      amount
     } else {
       BigDecimal.ZERO
     }

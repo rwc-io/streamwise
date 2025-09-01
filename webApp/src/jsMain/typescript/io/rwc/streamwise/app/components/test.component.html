@@ -1,7 +1,10 @@
 <div>
-  I am a happy div with state = {{ aSignal() }}!
-  <button (click)="increment()">Increment</button>
+  <canvas baseChart [data]="chartData.value" [options]="barChartOptions" [type]="'line'"> </canvas>
 </div>
 <div>
-  <canvas baseChart [data]="chartData()" [options]="barChartOptions" [type]="'line'"> </canvas>
+  Flows available:<br/>
+  @for (item of flowBundles.value; track item.id) {
+    {{ item.id }}: {{ item.name }} <br />
+  }
 </div>
+<div><p>&nbsp;</p></div>

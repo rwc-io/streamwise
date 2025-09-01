@@ -10,16 +10,6 @@ interface CashFlow {
   fun valueOn(date: LocalDate): BigDecimal
 }
 
-data class Fixed(val date: LocalDate, val amount: BigDecimal) : CashFlow {
-  override fun valueOn(date: LocalDate): BigDecimal {
-    return if (this@Fixed.date == date) {
-      amount
-    } else {
-      0.toBigDecimal()
-    }
-  }
-}
-
 fun reifyFlows(flows: List<CashFlow>, startDate: LocalDate, endDate: LocalDate): List<Fixed> {
   val cashFlow = mutableListOf<Fixed>()
 
@@ -33,7 +23,7 @@ fun reifyFlows(flows: List<CashFlow>, startDate: LocalDate, endDate: LocalDate):
   return cashFlow
 }
 
-fun makeSomeBalances(startDate: LocalDate, endDate: LocalDate): Map<LocalDate, BigDecimal> {
+fun makeSomeBalances(startDate: LocalDate, endDate: LocalDate): List<Fixed> {
   val flows = listOf(
     Fixed(LocalDate(2023, 1, 1), 1000.toBigDecimal()),
     Monthly("ebmud", 5, (-100).toBigDecimal()),
@@ -42,11 +32,14 @@ fun makeSomeBalances(startDate: LocalDate, endDate: LocalDate): Map<LocalDate, B
     Monthly("stuff", -7, (-500).toBigDecimal()),
     Monthly("income", 30, 1000.toBigDecimal()),
   )
+  return accumulateFlows(flows, startDate, endDate)
+}
 
-  val cash = reifyFlows(flows, startDate, endDate)
-  var runningTotal = 0.toBigDecimal()
-  return cash.associate {
+fun accumulateFlows(flows: List<CashFlow>, startDate: LocalDate, endDate: LocalDate, startingBalance: BigDecimal = 0.toBigDecimal()): List<Fixed> {
+  val cashFlow = reifyFlows(flows, startDate, endDate)
+  var runningTotal = startingBalance
+  return cashFlow.sortedBy { it.date }.map {
     runningTotal += it.amount
-    it.date to runningTotal
+    Fixed(date = it.date,runningTotal)
   }
 }
