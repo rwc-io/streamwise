@@ -14,14 +14,14 @@ import kotlin.math.abs
  *
  * @param dayOffset The day offset (1-indexed). If positive, it's the day from the start of the month.
  *                  If negative, it's the day from the end of the month.
- * @param value The value of the cash flow.
+ * @param amount The value of the cash flow.
  */
 @Serializable
 data class Monthly(
   val name: String,
   private val dayOffset: Int,
   @Serializable(with = BigDecimalHumanReadableSerializer::class)
-  private val value: BigDecimal,
+  private val amount: BigDecimal,
 ) : CashFlow {
   init {
     require(dayOffset != 0) { "Day offset cannot be zero" }
@@ -32,7 +32,7 @@ data class Monthly(
     val targetDay = calculateTargetDay(date.yearMonth)
 
     return if (date.day == targetDay) {
-      value
+      amount
     } else {
       BigDecimal.ZERO
     }
