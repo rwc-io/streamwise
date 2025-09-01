@@ -25,10 +25,12 @@ class StreamFire {
         .associate { (key, value) -> key.toString() to value.toString() }
       val useEmulators = opts["useEmulators"].toBoolean()
       val options = FirebaseOptions(
-        applicationId = opts["applicationId"] ?: "unknown-app-id",
         projectId = opts["projectId"] ?: "unknown-project-id",
+        applicationId = opts["appId"] ?: "unknown-app-id",
         apiKey = opts["apiKey"] ?: "unknown-api-key",
         authDomain = opts["authDomain"] ?: "unknown-auth-domain",
+        storageBucket = opts["storageBucket"] ?: "unknown-storage-bucket",
+        gcmSenderId = opts["messagingSenderId"] ?: "unknown-messaging-sender",
       )
       Firebase.initialize(options = options)
 
