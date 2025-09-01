@@ -43,10 +43,30 @@ class FlowBundleService {
       }
     }
 
+    val allFixed = combine(bundles.map { bundle ->
+      val doc = db.collection("flowBundles").document(bundle.id).collection("fixedFlows")
+      doc.snapshots
+    }) { snapshotsArray ->
+      snapshotsArray.flatMap { snapshot ->
+        snapshot.documents.mapNotNull { doc ->
+          try {
+            doc.data(Fixed.serializer())
+          } catch (e: Exception) {
+            console.error("Error deserializing Fixed from doc ${doc.id}: $e. Cause: ${e.cause}")
+            null
+          }
+        }
+      }
+    }
+
+    val allFlows = combine(allMonthlys, allFixed) { monthlys, fixeds ->
+      monthlys + fixeds
+    }
+
     // Track the collector so it can be canceled/restarted as necessary
     monthlysCollector = CoroutineScope(Dispatchers.Main).launch {
-      allMonthlys.collectLatest { monthlys ->
-        targetBalances.value = accumulateFlows(monthlys, startDate, endDate)
+      allFlows.collectLatest { flows ->
+        targetBalances.value = accumulateFlows(flows, startDate, endDate)
       }
     }
   }
