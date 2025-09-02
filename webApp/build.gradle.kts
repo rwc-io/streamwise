@@ -93,14 +93,21 @@ tasks.npmInstall {
 
 val ngBuild = tasks.register<NpxTask>("buildWebapp") {
   command.set("ng")
+  args.set(listOf("build", "--configuration=development"))
+  dependsOn(tasks.npmInstall)
+  inputs.dir(project.fileTree("src/jsMain").exclude("**/*.spec.ts"))
+  inputs.dir("node_modules")
+  inputs.files("angular.json", ".browserslistrc", "tsconfig.json", "tsconfig.app.json")
+  dependsOn(tasks.build)
+}
+
+val ngBuildProd = tasks.register<NpxTask>("buildProductionWebapp") {
+  command.set("ng")
   args.set(listOf("build", "--configuration=production"))
   dependsOn(tasks.npmInstall)
   inputs.dir(project.fileTree("src/jsMain").exclude("**/*.spec.ts"))
   inputs.dir("node_modules")
   inputs.files("angular.json", ".browserslistrc", "tsconfig.json", "tsconfig.app.json")
-  // Do we need an outputs directory?
-  // outputs.dir("${layout.buildDirectory}/install/webapp")
-
   dependsOn(tasks.build)
 }
 
