@@ -1,6 +1,7 @@
 [versions]
 angular = "20.1.4"
 bignum = "0.3.10"
+firebase-base="12.2.1"
 firebase-app="0.14.2"
 firebase-auth="1.11.0"
 firebase-firestore="4.9.1"

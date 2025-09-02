@@ -11,6 +11,7 @@ firebase-debug.log
 firestore-debug.log
 
 # Other stuff
+pglite-debug.log
 *.iml
 .kotlin
 .gradle
