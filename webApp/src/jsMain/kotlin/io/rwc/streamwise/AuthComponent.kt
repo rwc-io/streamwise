@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalJsExport::class)
 @JsExport
 class AuthComponent {
-  private val auth = StreamFire.auth
+  private val auth = StreamFire.instance.auth
 
   @Suppress("unused")
   val authedUser = computed {

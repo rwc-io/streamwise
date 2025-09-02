@@ -9,8 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class AuthService {
-  val auth: FirebaseAuth = StreamFire.auth
+class AuthService(auth: FirebaseAuth) {
   var authCollector: kotlinx.coroutines.Job? = null
 
   val currentAuth = Signal<FirebaseUser?>(null)
@@ -43,7 +42,7 @@ class AuthService {
 @OptIn(ExperimentalJsExport::class)
 @JsExport
 fun checkAuthRedirectResult() {
-  val auth = StreamFire.auth
+  val auth = StreamFire.instance.auth
   getRedirectResult(auth.js).then { result ->
     if (result != null) {
       println("Processed sign-in redirect result for user ${result.user.uid}")

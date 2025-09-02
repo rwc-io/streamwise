@@ -44,7 +44,7 @@ class FlowBundleService {
 }
 
 fun <T : CashFlow> Array<FlowBundle>.readCashFlows(type: String, serializer: KSerializer<T>): Flow<List<CashFlow>> {
-  val db = StreamFire.dataService.db
+  val db = StreamFire.instance.firestore
 
   return combine(this.map { bundle ->
     val doc = db.collection("flowBundles").document(bundle.id).collection(type)

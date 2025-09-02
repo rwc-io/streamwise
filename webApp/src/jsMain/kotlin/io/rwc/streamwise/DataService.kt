@@ -1,5 +1,6 @@
 package io.rwc.streamwise
 
+import dev.gitlive.firebase.auth.FirebaseAuth
 import dev.gitlive.firebase.firestore.FirebaseFirestore
 import io.rwc.streamwise.flows.FlowBundle
 import kangular.core.Signal
@@ -7,8 +8,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class DataService {
-  val db: FirebaseFirestore = StreamFire.firestore
+class DataService(firestore: FirebaseFirestore, auth: FirebaseAuth) {
   private var authWatcher: kotlinx.coroutines.Job? = null
 
   var flowBundles = Signal<Array<FlowBundle>>(emptyArray())
@@ -16,7 +16,7 @@ class DataService {
 
   init {
     // When auth changes, we need to re-query based on new auth
-    val authFlow = StreamFire.auth.authStateChanged
+    val authFlow = auth.authStateChanged
     authWatcher = CoroutineScope(Dispatchers.Main).launch {
       authFlow.collect {
         removeAuthedListeners()
@@ -26,7 +26,7 @@ class DataService {
         }
 
         val flowBundlesFlow =
-          db.collection("flowBundles").where { "ownerUid" equalTo StreamFire.auth.currentUser?.uid }.snapshots
+          firestore.collection("flowBundles").where { "ownerUid" equalTo auth.currentUser?.uid }.snapshots
 
         flowBundlesCollector = CoroutineScope(Dispatchers.Main).launch {
           try {
