@@ -19,14 +19,18 @@ class AuthService {
     val authFlow = auth.authStateChanged
     println("Listening for auth state changes...")
     authCollector = CoroutineScope(Dispatchers.Main).launch {
-      authFlow.collect { newState ->
-        if (newState == null) {
-          println("User is signed out")
-          currentAuth.value = null
-        } else {
-          println("${newState.uid} is signed in")
-          currentAuth.value = newState
+      try {
+        authFlow.collect { newState ->
+          if (newState == null) {
+            println("User is signed out")
+            currentAuth.value = null
+          } else {
+            println("${newState.uid} is signed in")
+            currentAuth.value = newState
+          }
         }
+      } finally {
+        println("Auth state change flow completed")
       }
     }
   }
