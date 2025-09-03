@@ -4,35 +4,28 @@ import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import external.ChartData
 import external.ChartDataset
 import io.rwc.streamwise.flows.Fixed
-import kangular.core.Computed
-import kangular.core.WritableSignal
+import io.rwc.streamwise.flows.FlowBundle
+import kangular.core.AngularWritable
 import kotlinx.datetime.LocalDate
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-class TestComponent {
-  private val dataService = StreamFire.flowsService
-
-  @Suppress("unused")
-  val flowBundles = dataService.flowBundles
+class TestComponent(ngBalancesSignal: dynamic) {
+  private val balancesSignal = AngularWritable<Array<Fixed>>(ngBalancesSignal)
 
   private val startDate = LocalDate(2025, 1, 1)
   private val endDate = LocalDate(2025, 12, 31)
 
-  private val balances = WritableSignal(
-    listOf<Fixed>()
-  )
-
   private val flowBundleService = FlowBundleService()
 
-  @Suppress("unused")
-  val chartData = Computed {
-    ChartData(
-      labels = balances.value.map { it.date.toString() }.toTypedArray(),
+  @Suppress("unused", "non_exportable_type")
+  fun computeChartData(balances: Array<Fixed>): dynamic {
+    return ChartData(
+      labels = balances.map { it.date.toString() }.toTypedArray(),
       datasets = arrayOf(
         ChartDataset(
           label = "Balance",
-          data = balances.value.map { it.amount.toStringExpanded() }.toTypedArray(),
+          data = balances.map { it.amount.toStringExpanded() }.toTypedArray(),
           backgroundColor = "#4bc0c0ff",
           borderWidth = 1,
           fill = false,
@@ -67,16 +60,12 @@ class TestComponent {
     flowBundleService.stop()
   }
 
-  // It seems we can't use `effect` directly in a constructor.
-  // Even though we're supposed to be able to as a superclass.
-  // If we call effect in init, we get this error:
-  // NG0203: inject() must be called from an injection context
   @Suppress("unused")
-  val effecter = {
+  fun listenToBalances(flowBundles: Array<FlowBundle>) {
     console.log("Recomputing balances")
     flowBundleService.start(
-      targetBalances = balances,
-      bundlesSignal = flowBundles,
+      targetBalances = balancesSignal,
+      bundles = flowBundles,
       startDate = startDate,
       endDate = endDate,
     )

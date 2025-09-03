@@ -1,10 +1,10 @@
 <div>
-  <canvas baseChart [data]="chartData.value" [options]="barChartOptions" [type]="'line'"> </canvas>
+  <canvas baseChart [data]="chartData()" [options]="barChartOptions" [type]="'line'"></canvas>
 </div>
 <div>
   Flows available:<br/>
-  @for (item of flowBundles.value; track item.id) {
-    {{ item.id }}: {{ item.name }} <br />
+  @for (item of flowsService.flowBundles(); track item.id) {
+    {{ item.id }}: {{ item.name }} <br/>
   }
 </div>
 <div><p>&nbsp;</p></div>

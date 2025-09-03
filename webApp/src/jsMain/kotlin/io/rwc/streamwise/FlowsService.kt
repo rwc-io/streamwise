@@ -1,18 +1,20 @@
 package io.rwc.streamwise
 
 import io.rwc.streamwise.flows.FlowBundle
-import kangular.core.WritableSignal
+import kangular.core.AngularWritable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class FlowsService() {
+@OptIn(ExperimentalJsExport::class)
+@JsExport
+class FlowsService(ngFlowBundlesSignal: dynamic) {
   private val firestore = StreamFire.instance.firestore
   private val auth = StreamFire.instance.auth
 
   private var authWatcher: kotlinx.coroutines.Job? = null
 
-  var flowBundles = WritableSignal<Array<FlowBundle>>(emptyArray())
+  private var flowBundlesSignal = AngularWritable<Array<FlowBundle>>(ngFlowBundlesSignal)
   private var flowBundlesCollector: kotlinx.coroutines.Job? = null
 
   init {
@@ -36,7 +38,7 @@ class FlowsService() {
                 val bundle = doc.data(FlowBundle.serializer())
                 bundle.copy(id = doc.id)
               }
-              flowBundles.value = bundles.toTypedArray()
+              flowBundlesSignal.set(bundles.toTypedArray())
             }
           } finally {
             println("flowBundles collection flow completed")
@@ -51,7 +53,8 @@ class FlowsService() {
     flowBundlesCollector = null
   }
 
-  fun cleanup() {
+  @Suppress("unused")
+  fun ngOnDestroy() {
     removeAuthedListeners()
     authWatcher?.cancel()
   }

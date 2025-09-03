@@ -17,7 +17,6 @@ import dev.gitlive.firebase.js
 class StreamFire {
   companion object Singleton {
     private var streamfireInstance: StreamFire? = null
-    private var flowsServiceInstance: FlowsService? = null
 
     val instance: StreamFire
       get() {
@@ -26,15 +25,6 @@ class StreamFire {
           streamfireInstance = StreamFire()
         }
         return streamfireInstance!!
-      }
-
-    val flowsService: FlowsService
-      get() {
-        if (flowsServiceInstance == null) {
-          println("Instantiating DataService")
-          flowsServiceInstance = FlowsService()
-        }
-        return flowsServiceInstance!!
       }
   }
 
@@ -63,9 +53,5 @@ class StreamFire {
       connectAuthEmulator(auth.js, "http://localhost:9099")
       connectFirestoreEmulator(firestore.js, "localhost", 8080)
     }
-
-    /*CoroutineScope(Dispatchers.Main).launch {
-      auth.signInWithEmailAndPassword("user@example.com", "password")
-    }*/
   }
 }

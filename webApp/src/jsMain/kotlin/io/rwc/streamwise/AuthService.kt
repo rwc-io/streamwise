@@ -3,7 +3,7 @@ package io.rwc.streamwise
 import dev.gitlive.firebase.auth.externals.User
 import dev.gitlive.firebase.auth.externals.getRedirectResult
 import dev.gitlive.firebase.auth.js
-import kangular.core.WritableSignal
+import kangular.core.AngularWritable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -14,7 +14,7 @@ class AuthService(currentUserNgSignal: dynamic) {
   private val auth = StreamFire.instance.auth
   private var authCollector: kotlinx.coroutines.Job? = null
 
-  private val currentAuth: WritableSignal<User?> = WritableSignal(ngSignal=currentUserNgSignal)
+  private val currentAuth = AngularWritable<User?>(ngSignal = currentUserNgSignal)
 
   init {
     val authFlow = auth.authStateChanged
@@ -24,10 +24,10 @@ class AuthService(currentUserNgSignal: dynamic) {
         authFlow.collect { newState ->
           if (newState == null) {
             println("User is signed out")
-            currentAuth.value = null
+            currentAuth.set(null)
           } else {
             println("${newState.uid} is signed in")
-            currentAuth.value = newState.js
+            currentAuth.set(newState.js)
           }
         }
       } finally {
@@ -36,7 +36,7 @@ class AuthService(currentUserNgSignal: dynamic) {
     }
   }
 
-  fun cleanup() {
+  fun ngOnDestroy() {
     authCollector?.cancel()
   }
 }

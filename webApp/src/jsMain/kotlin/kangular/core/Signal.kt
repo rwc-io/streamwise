@@ -1,21 +1,12 @@
 package kangular.core
 
-import kangular.external.AngularCore
-
-interface Signal<T> {
-  val value: T
+/* Signal reads are not implemented. They don't work. Only
+ * reads managed by Angular trigger render state reactions.
+ */
+interface WritableSignal<T> {
+  fun set(value: T)
 }
 
-class ReadonlySignal<T>(val ngSignal: dynamic) : Signal<T> {
-  override val value: T
-    get() = ngSignal()
-}
-
-class WritableSignal<T>(val ngSignal: dynamic) : Signal<T> {
-  @JsName("altcon")
-  constructor(initialValue: T) : this(AngularCore.signal(initialValue))
-
-  override var value: T
-    get() = ngSignal()
-    set(value) = ngSignal.set(value)
+class AngularWritable<T>(val ngSignal: dynamic) : WritableSignal<T> {
+  override fun set(value: T) = ngSignal.set(value)
 }

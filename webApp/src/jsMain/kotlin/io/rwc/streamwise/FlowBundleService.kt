@@ -1,7 +1,6 @@
 package io.rwc.streamwise
 
 import io.rwc.streamwise.flows.*
-import kangular.core.Signal
 import kangular.core.WritableSignal
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -17,14 +16,13 @@ class FlowBundleService {
   private var monthlysCollector: Job? = null
 
   fun start(
-    targetBalances: WritableSignal<List<Fixed>>,
-    bundlesSignal: Signal<Array<FlowBundle>>,
+    targetBalances: WritableSignal<Array<Fixed>>,
+    bundles: Array<FlowBundle>,
     startDate: LocalDate,
     endDate: LocalDate,
   ) {
     stop()
 
-    val bundles = bundlesSignal.value
     val subCollectionFlows = listOf(
       bundles.readCashFlows("fixedFlows", Fixed.serializer()),
       bundles.readCashFlows("monthlyFlows", Monthly.serializer()),
@@ -33,7 +31,7 @@ class FlowBundleService {
 
     monthlysCollector = CoroutineScope(Dispatchers.Main).launch {
       allFlows.collectLatest { flows ->
-        targetBalances.value = accumulateFlows(flows, startDate, endDate)
+        targetBalances.set(accumulateFlows(flows, startDate, endDate).toTypedArray())
       }
     }
   }

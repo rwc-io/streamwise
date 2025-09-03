@@ -1,8 +1,8 @@
-import {Component, effect, inject} from "@angular/core";
+import {Component, computed, effect, inject, signal, WritableSignal} from "@angular/core";
 import {BaseChartDirective} from "ng2-charts";
 
 import * as streamwise from '@streamwise';
-import {AuthService} from "../auth/auth-service";
+import {FlowsService} from "../flows/flows-service";
 
 @Component({
   templateUrl: './test.component.html',
@@ -11,13 +11,20 @@ import {AuthService} from "../auth/auth-service";
   selector: 'test-component',
 })
 class TestComponent extends streamwise.TestComponent {
+  readonly flowsService = inject(FlowsService);
+
   constructor() {
-    super()
+    const theBalances: WritableSignal<Array<any>> = signal([]);
+    super(theBalances);
+    this.balances = theBalances;
 
     effect(() => {
-      this.effecter()
+      this.listenToBalances(this.flowsService.flowBundles())
     });
   }
+
+  balances: WritableSignal<Array<any>>;
+  chartData = computed(() => this.computeChartData(this.balances()));
 }
 
 export {TestComponent};
