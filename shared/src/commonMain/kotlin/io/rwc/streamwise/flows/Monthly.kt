@@ -41,8 +41,7 @@ data class Monthly(
   /**
    * Calculates the target day of the month based on the day offset.
    *
-   * @param month The month
-   * @param year The year (needed to determine the number of days in the month)
+   * @param yearMonth The year & month.
    * @return The target day of the month
    */
   private fun calculateTargetDay(yearMonth: YearMonth): Int {
