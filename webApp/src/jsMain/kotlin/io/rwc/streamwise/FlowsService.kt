@@ -1,14 +1,15 @@
 package io.rwc.streamwise
 
-import dev.gitlive.firebase.auth.FirebaseAuth
-import dev.gitlive.firebase.firestore.FirebaseFirestore
 import io.rwc.streamwise.flows.FlowBundle
 import kangular.core.WritableSignal
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class DataService(firestore: FirebaseFirestore, auth: FirebaseAuth) {
+class FlowsService() {
+  private val firestore = StreamFire.instance.firestore
+  private val auth = StreamFire.instance.auth
+
   private var authWatcher: kotlinx.coroutines.Job? = null
 
   var flowBundles = WritableSignal<Array<FlowBundle>>(emptyArray())

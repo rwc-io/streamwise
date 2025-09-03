@@ -5,15 +5,13 @@ import external.ChartData
 import external.ChartDataset
 import io.rwc.streamwise.flows.Fixed
 import kangular.core.Computed
-import kangular.core.Signal
 import kangular.core.WritableSignal
-import kangular.external.AngularCore.effect
 import kotlinx.datetime.LocalDate
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
 class TestComponent {
-  private val dataService = StreamFire.dataService
+  private val dataService = StreamFire.flowsService
 
   @Suppress("unused")
   val flowBundles = dataService.flowBundles
