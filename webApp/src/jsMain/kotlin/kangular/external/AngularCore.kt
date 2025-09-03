@@ -5,5 +5,5 @@ package kangular.external
 external object AngularCore {
   val computed: dynamic
   val effect: dynamic
-  val signal: dynamic
+  fun <T> signal(initialValue: T): () -> T
 }

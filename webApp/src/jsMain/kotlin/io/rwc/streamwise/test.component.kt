@@ -6,6 +6,7 @@ import external.ChartDataset
 import io.rwc.streamwise.flows.Fixed
 import kangular.core.Computed
 import kangular.core.Signal
+import kangular.core.WritableSignal
 import kangular.external.AngularCore.effect
 import kotlinx.datetime.LocalDate
 
@@ -20,7 +21,7 @@ class TestComponent {
   private val startDate = LocalDate(2025, 1, 1)
   private val endDate = LocalDate(2025, 12, 31)
 
-  private val balances = Signal(
+  private val balances = WritableSignal(
     listOf<Fixed>()
   )
 
@@ -29,11 +30,11 @@ class TestComponent {
   @Suppress("unused")
   val chartData = Computed {
     ChartData(
-      labels = balances().map { it.date.toString() }.toTypedArray(),
+      labels = balances.value.map { it.date.toString() }.toTypedArray(),
       datasets = arrayOf(
         ChartDataset(
           label = "Balance",
-          data = balances().map { it.amount.toStringExpanded() }.toTypedArray(),
+          data = balances.value.map { it.amount.toStringExpanded() }.toTypedArray(),
           backgroundColor = "#4bc0c0ff",
           borderWidth = 1,
           fill = false,

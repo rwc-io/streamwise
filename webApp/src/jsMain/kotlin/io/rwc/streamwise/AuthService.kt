@@ -1,18 +1,20 @@
 package io.rwc.streamwise
 
-import dev.gitlive.firebase.auth.FirebaseAuth
-import dev.gitlive.firebase.auth.FirebaseUser
+import dev.gitlive.firebase.auth.externals.User
 import dev.gitlive.firebase.auth.externals.getRedirectResult
 import dev.gitlive.firebase.auth.js
-import kangular.core.Signal
+import kangular.core.WritableSignal
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class AuthService(auth: FirebaseAuth) {
-  var authCollector: kotlinx.coroutines.Job? = null
+@OptIn(ExperimentalJsExport::class)
+@JsExport
+class AuthService(currentUserNgSignal: dynamic) {
+  private val auth = StreamFire.instance.auth
+  private var authCollector: kotlinx.coroutines.Job? = null
 
-  val currentAuth = Signal<FirebaseUser?>(null)
+  private val currentAuth: WritableSignal<User?> = WritableSignal(ngSignal=currentUserNgSignal)
 
   init {
     val authFlow = auth.authStateChanged
@@ -25,7 +27,7 @@ class AuthService(auth: FirebaseAuth) {
             currentAuth.value = null
           } else {
             println("${newState.uid} is signed in")
-            currentAuth.value = newState
+            currentAuth.value = newState.js
           }
         }
       } finally {

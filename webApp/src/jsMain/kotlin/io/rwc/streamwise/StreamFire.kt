@@ -17,7 +17,6 @@ import dev.gitlive.firebase.js
 class StreamFire {
   companion object Singleton {
     private var streamfireInstance: StreamFire? = null
-    private var authServiceInstance: AuthService? = null
     private var dbServiceInstance: DataService? = null
 
     val instance: StreamFire
@@ -27,15 +26,6 @@ class StreamFire {
           streamfireInstance = StreamFire()
         }
         return streamfireInstance!!
-      }
-
-    val authService: AuthService
-      get() {
-        if (authServiceInstance == null) {
-          println("Instantiating AuthService")
-          authServiceInstance = AuthService(instance.auth)
-        }
-        return authServiceInstance!!
       }
 
     val dataService: DataService

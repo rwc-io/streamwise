@@ -1,7 +1,8 @@
-import {Component, effect} from "@angular/core";
+import {Component, effect, inject} from "@angular/core";
 import {BaseChartDirective} from "ng2-charts";
 
 import * as streamwise from '@streamwise';
+import {AuthService} from "../auth/auth-service";
 
 @Component({
   templateUrl: './test.component.html',

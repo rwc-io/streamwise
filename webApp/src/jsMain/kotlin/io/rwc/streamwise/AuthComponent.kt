@@ -2,7 +2,6 @@ package io.rwc.streamwise
 
 import dev.gitlive.firebase.auth.externals.signInWithRedirect
 import dev.gitlive.firebase.auth.js
-import kangular.external.AngularCore.computed
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -12,15 +11,6 @@ import kotlinx.coroutines.launch
 @JsExport
 class AuthComponent {
   private val auth = StreamFire.instance.auth
-
-  @Suppress("unused")
-  val authedUser = computed {
-    // Getting the currentAuth directly does not seem to work.
-    // When accessed from JS, it contains an extra object layer,
-    // which I think is the js object field. JS doesn't seem to
-    // see the properties.
-    StreamFire.authService.currentAuth()?.js
-  }
 
   @Suppress("unused")
   fun ngOnInit() {

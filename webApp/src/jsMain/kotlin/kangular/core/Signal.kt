@@ -2,25 +2,20 @@ package kangular.core
 
 import kangular.external.AngularCore
 
-/**
- * A typed wrapper for Angular's signals.
- * Should we be generating types from the typescript definitions?
- * I don't think that works, b/c we can't re-type the call signature (??)
- * But that means that the underlying js signal is untyped :-/
- */
-@OptIn(ExperimentalJsExport::class)
-@JsExport
-class Signal<T>(initialValue: T) {
-  val ngSignal: dynamic = AngularCore.signal(initialValue)
+interface Signal<T> {
+  val value: T
+}
 
-  // Note that this only applies in Kotlin.
-  // A kotlin Signal<T> property type can't be 'invoked' from JS.
-  // (JS has to invoke the ngSignal property)
-  operator fun invoke(): T {
-    return ngSignal()
-  }
+class ReadonlySignal<T>(val ngSignal: dynamic) : Signal<T> {
+  override val value: T
+    get() = ngSignal()
+}
 
-  var value: T
+class WritableSignal<T>(val ngSignal: dynamic) : Signal<T> {
+  @JsName("altcon")
+  constructor(initialValue: T) : this(AngularCore.signal(initialValue))
+
+  override var value: T
     get() = ngSignal()
     set(value) = ngSignal.set(value)
 }
