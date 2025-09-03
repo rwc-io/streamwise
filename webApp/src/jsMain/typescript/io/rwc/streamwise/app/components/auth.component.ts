@@ -1,6 +1,7 @@
-import {Component} from "@angular/core";
+import {Component, inject} from "@angular/core";
 
 import * as streamwise from '@streamwise';
+import {AuthService} from "../auth/auth-service";
 
 @Component({
   templateUrl: './auth.component.html',
@@ -9,11 +10,12 @@ import * as streamwise from '@streamwise';
   selector: 'auth-component',
 })
 class AuthComponent extends streamwise.AuthComponent {
+  private readonly authService = inject(AuthService);
+  readonly authedUser = this.authService.currentUser;
+
   constructor() {
     super()
   }
-
-  protected readonly JSON = JSON;
 }
 
 export {AuthComponent};

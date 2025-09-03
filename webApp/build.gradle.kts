@@ -59,8 +59,10 @@ kotlin {
       implementation(libs.kotlinx.datetime)
 
       implementation(npm("@angular/core", libs.versions.angular.get()))
+      implementation(npm("firebase", libs.versions.firebase.base.get()))
       implementation(npm("@firebase/app", libs.versions.firebase.app.get()))
       implementation(npm("@firebase/auth", libs.versions.firebase.auth.get()))
+      implementation(npm("@firebase/firestore", libs.versions.firebase.firestore.get()))
       implementation(npm("rxjs", libs.versions.rxjs.get()))
 
       implementation(libs.gitlive.firebase.auth)
@@ -91,14 +93,21 @@ tasks.npmInstall {
 
 val ngBuild = tasks.register<NpxTask>("buildWebapp") {
   command.set("ng")
+  args.set(listOf("build", "--configuration=development"))
+  dependsOn(tasks.npmInstall)
+  inputs.dir(project.fileTree("src/jsMain").exclude("**/*.spec.ts"))
+  inputs.dir("node_modules")
+  inputs.files("angular.json", ".browserslistrc", "tsconfig.json", "tsconfig.app.json")
+  dependsOn(tasks.build)
+}
+
+val ngBuildProd = tasks.register<NpxTask>("buildProductionWebapp") {
+  command.set("ng")
   args.set(listOf("build", "--configuration=production"))
   dependsOn(tasks.npmInstall)
   inputs.dir(project.fileTree("src/jsMain").exclude("**/*.spec.ts"))
   inputs.dir("node_modules")
   inputs.files("angular.json", ".browserslistrc", "tsconfig.json", "tsconfig.app.json")
-  // Do we need an outputs directory?
-  // outputs.dir("${layout.buildDirectory}/install/webapp")
-
   dependsOn(tasks.build)
 }
 

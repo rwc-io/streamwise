@@ -1,22 +1,25 @@
 package io.rwc.streamwise
 
-import dev.gitlive.firebase.firestore.FirebaseFirestore
 import io.rwc.streamwise.flows.FlowBundle
-import kangular.core.Signal
+import kangular.core.AngularWritable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class DataService {
-  val db: FirebaseFirestore = StreamFire.firestore
+@OptIn(ExperimentalJsExport::class)
+@JsExport
+class FlowsService(ngFlowBundlesSignal: dynamic) {
+  private val firestore = StreamFire.instance.firestore
+  private val auth = StreamFire.instance.auth
+
   private var authWatcher: kotlinx.coroutines.Job? = null
 
-  var flowBundles = Signal<Array<FlowBundle>>(emptyArray())
+  private var flowBundlesSignal = AngularWritable<Array<FlowBundle>>(ngFlowBundlesSignal)
   private var flowBundlesCollector: kotlinx.coroutines.Job? = null
 
   init {
     // When auth changes, we need to re-query based on new auth
-    val authFlow = StreamFire.auth.authStateChanged
+    val authFlow = auth.authStateChanged
     authWatcher = CoroutineScope(Dispatchers.Main).launch {
       authFlow.collect {
         removeAuthedListeners()
@@ -26,7 +29,7 @@ class DataService {
         }
 
         val flowBundlesFlow =
-          db.collection("flowBundles").where { "ownerUid" equalTo StreamFire.auth.currentUser?.uid }.snapshots
+          firestore.collection("flowBundles").where { "ownerUid" equalTo auth.currentUser?.uid }.snapshots
 
         flowBundlesCollector = CoroutineScope(Dispatchers.Main).launch {
           try {
@@ -35,7 +38,7 @@ class DataService {
                 val bundle = doc.data(FlowBundle.serializer())
                 bundle.copy(id = doc.id)
               }
-              flowBundles.value = bundles.toTypedArray()
+              flowBundlesSignal.set(bundles.toTypedArray())
             }
           } finally {
             println("flowBundles collection flow completed")
@@ -50,7 +53,8 @@ class DataService {
     flowBundlesCollector = null
   }
 
-  fun cleanup() {
+  @Suppress("unused")
+  fun ngOnDestroy() {
     removeAuthedListeners()
     authWatcher?.cancel()
   }

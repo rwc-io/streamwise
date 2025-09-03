@@ -5,11 +5,13 @@
 webApp/src/jsMain/resources/firebase-config.json
 
 # Local firebase data
+.firebase
 emulator-data/
 firebase-debug.log
 firestore-debug.log
 
 # Other stuff
+pglite-debug.log
 *.iml
 .kotlin
 .gradle

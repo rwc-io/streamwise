@@ -1,8 +1,10 @@
 [versions]
 angular = "20.1.4"
 bignum = "0.3.10"
-firebase-app="0.14.1"
+firebase-base="12.2.1"
+firebase-app="0.14.2"
 firebase-auth="1.11.0"
+firebase-firestore="4.9.1"
 gitlive-firebase = "2.3.0"
 kotlin = "2.2.0"
 kotlin-wrappers-js = "2025.7.1"

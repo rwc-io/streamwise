@@ -4,36 +4,28 @@ import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import external.ChartData
 import external.ChartDataset
 import io.rwc.streamwise.flows.Fixed
-import kangular.core.Computed
-import kangular.core.Signal
-import kangular.external.AngularCore.effect
+import io.rwc.streamwise.flows.FlowBundle
+import kangular.core.AngularWritable
 import kotlinx.datetime.LocalDate
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-class TestComponent {
-  private val dataService = StreamFire.dataService
-
-  @Suppress("unused")
-  val flowBundles = dataService.flowBundles
+class TestComponent(ngBalancesSignal: dynamic) {
+  private val balancesSignal = AngularWritable<Array<Fixed>>(ngBalancesSignal)
 
   private val startDate = LocalDate(2025, 1, 1)
   private val endDate = LocalDate(2025, 12, 31)
 
-  private val balances = Signal(
-    listOf<Fixed>()
-  )
-
   private val flowBundleService = FlowBundleService()
 
-  @Suppress("unused")
-  val chartData = Computed {
-    ChartData(
-      labels = balances().map { it.date.toString() }.toTypedArray(),
+  @Suppress("unused", "non_exportable_type")
+  fun computeChartData(balances: Array<Fixed>): dynamic {
+    return ChartData(
+      labels = balances.map { it.date.toString() }.toTypedArray(),
       datasets = arrayOf(
         ChartDataset(
           label = "Balance",
-          data = balances().map { it.amount.toStringExpanded() }.toTypedArray(),
+          data = balances.map { it.amount.toStringExpanded() }.toTypedArray(),
           backgroundColor = "#4bc0c0ff",
           borderWidth = 1,
           fill = false,
@@ -68,15 +60,14 @@ class TestComponent {
     flowBundleService.stop()
   }
 
-  init {
-    effect {
-      console.log("Recomputing balances")
-      flowBundleService.start(
-        targetBalances = balances,
-        bundlesSignal = flowBundles,
-        startDate = startDate,
-        endDate = endDate,
-      )
-    }
+  @Suppress("unused")
+  fun listenToBalances(flowBundles: Array<FlowBundle>) {
+    console.log("Recomputing balances")
+    flowBundleService.start(
+      targetBalances = balancesSignal,
+      bundles = flowBundles,
+      startDate = startDate,
+      endDate = endDate,
+    )
   }
 }
