@@ -14,7 +14,7 @@ class TestComponent(ngBalancesSignal: dynamic) {
   private val balancesSignal = AngularWritable<Array<Fixed>>(ngBalancesSignal)
 
   private val startDate = LocalDate(2025, 1, 1)
-  private val endDate = LocalDate(2025, 12, 31)
+  private val endDate = LocalDate(2026, 12, 31)
 
   private val flowBundleService = FlowBundleService()
 
