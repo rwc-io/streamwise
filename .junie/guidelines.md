@@ -2,7 +2,7 @@
 
 Project overview
 - Streamwise is a Kotlin Multiplatform project focused on modeling and visualizing cash flows (e.g., Fixed, Weekly, Monthly) and exposing them to a web UI.
-- Technologies: Kotlin Multiplatform (shared logic), Kotlin/JS for web, TypeScript interop, Angular in TypeScript, Gradle build, Kotlinx Serialization and DateTime, ION‑Spin BigNum, optional Firebase emulation for local development.
+- Technologies: Kotlin Multiplatform (shared logic), Firebase (server), Kotlin/JS for web, TypeScript interop, Angular in TypeScript, Gradle build, Kotlinx Serialization and DateTime, ION‑Spin BigNum, optional Firebase emulation for local development.
 
 Repository structure
 - shared: Multiplatform library with core domain types and logic.
@@ -26,11 +26,22 @@ Testing guidance for Junie
 - When modifying webApp Kotlin/JS interop or TS usage impacting compilation, run: ./gradlew :webApp:buildWebApp
 - Prefer running the narrowest set of tasks necessary to validate changes; fall back to ./gradlew build if unsure.
 
+Data model
+- The application uses Firestore to store application data.
+- Security rules keep user data private.
+- Cash flow bundles' flows reference the cash flow owner for access control.
+
 Coding conventions
 - Kotlin: Follow idiomatic Kotlin style; prefer immutable data structures and pure functions for domain logic.
 - Serialization: Use kotlinx.serialization annotations already present; keep types stable across JS interop (avoid non-exportable types in @JsExport APIs).
 - Numeric types: Monetary values use ION‑Spin BigDecimal; avoid Double for money.
 - Tests: Add or update tests under shared/src/commonTest for domain changes.
+
+What is a cash flow?
+- A cash flow represents some amount of money on some date.
+- Types of cash flows include Fixed (one-time), Weekly, Monthly, etc.
+- The Firebase data model organizes cash flows into *bundles*.
+- A bundle has a subcollection for each type of cash flow.
 
 What Junie should do when handling issues
 - Make minimal changes required to satisfy the issue.

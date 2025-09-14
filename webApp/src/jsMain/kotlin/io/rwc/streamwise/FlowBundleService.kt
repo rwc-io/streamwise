@@ -21,6 +21,7 @@ class FlowBundleService {
       bundles.readCashFlows("fixedFlows", Fixed.serializer()),
       bundles.readCashFlows("monthlyFlows", Monthly.serializer()),
       bundles.readCashFlows("weeklyFlows", Weekly.serializer()),
+      bundles.readCashFlows("yearlyFlows", Yearly.serializer()),
     )
     val bundleFlows = combine(subCollectionFlows) { flowLists -> flowLists.flatMap { it } }
 
@@ -43,6 +44,7 @@ class FlowBundleService {
       bundles.readCashFlows("fixedFlows", Fixed.serializer()),
       bundles.readCashFlows("monthlyFlows", Monthly.serializer()),
       bundles.readCashFlows("weeklyFlows", Weekly.serializer()),
+      bundles.readCashFlows("yearlyFlows", Yearly.serializer()),
     )
     val allFlows = combine(subCollectionFlows) { flowLists -> flowLists.flatMap { it } }
 
