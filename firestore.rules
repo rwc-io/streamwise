@@ -28,6 +28,11 @@ service cloud.firestore {
         // Allow reads by owner
         allow read, write: if get(/databases/(default)/documents/flowBundles/$(bundleId)).data.ownerUid == request.auth.uid;
       }
+
+      match /weeklyFlows/{weeklyFlowId} {
+        // Allow reads by owner
+        allow read, write: if get(/databases/(default)/documents/flowBundles/$(bundleId)).data.ownerUid == request.auth.uid;
+      }
     }
     match /{document=**} {
       allow read, write: if isAdmin();
