@@ -4,12 +4,16 @@ import {RouterOutlet} from '@angular/router';
 import * as streamwise from '@streamwise';
 import {TestComponent} from "./components/test.component";
 import {AuthComponent} from "./components/auth.component";
+import {MatDrawer, MatDrawerContainer} from "@angular/material/sidenav";
+import {MatIconButton} from "@angular/material/button";
+import {MatToolbar} from "@angular/material/toolbar";
+import {MatIcon} from "@angular/material/icon";
 
 streamwise.checkAuthRedirectResult()
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, AuthComponent, TestComponent],
+  imports: [RouterOutlet, AuthComponent, TestComponent, MatDrawerContainer, MatDrawer, MatToolbar, MatIcon, MatIconButton],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

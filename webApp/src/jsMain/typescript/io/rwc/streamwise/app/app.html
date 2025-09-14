@@ -1,19 +1,42 @@
-<style>
-</style>
 
-<div class="header">
-  <div>
-    <h1 style="display: inline">StreamWise</h1>
-  </div>
-  <div style="margin-left: auto;">
-    <auth-component></auth-component>
-  </div>
-</div>
-
+<!--
+Get responsive sidenav with "over" mode on small screens from:
+https://material.angular.dev/components/sidenav/examples#sidenav-responsive
+-->
 <main class="main">
-  <div>
-    <test-component></test-component>
+  <div class="header">
+    <mat-toolbar>
+      <button matIconButton class="menu-icon" aria-label="Menu" (click)="drawer.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span>StreamWise 💰</span>
+      <span class="header-spacer"></span>
+      <button matIconButton class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+        <mat-icon>favorite</mat-icon>
+      </button>
+      <button matIconButton class="example-icon" aria-label="Example icon-button with share icon">
+        <mat-icon>share</mat-icon>
+      </button>
+      <div style="margin-left: auto;">
+        <auth-component></auth-component>
+      </div>
+    </mat-toolbar>
+  </div>
+  <div class="content">
+    <mat-drawer-container class="content-menu" autosize >
+      <mat-drawer #drawer class="side-menu" mode="side">
+        <p>Auto-resizing sidenav</p>
+      </mat-drawer>
+
+      <div class="content-main">
+        <div>
+          <test-component></test-component>
+        </div>
+      </div>
+    </mat-drawer-container>
+
   </div>
 </main>
 
-<router-outlet />
+
+<router-outlet/>
