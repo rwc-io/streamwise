@@ -16,8 +16,6 @@ import kotlin.js.JsExport
  * - skip = 1 → every 2 years
  * - skip = 2 → every 3 years
  */
-@OptIn(ExperimentalJsExport::class)
-@JsExport
 @Serializable
 data class Yearly(
   val name: String,
