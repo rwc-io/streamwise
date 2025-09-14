@@ -3,6 +3,7 @@ package io.rwc.streamwise.flows
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import com.ionspin.kotlin.bignum.serialization.kotlinx.bigdecimal.BigDecimalHumanReadableSerializer
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.number
 import kotlinx.serialization.Serializable
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
@@ -41,11 +42,11 @@ data class Yearly(
   }
 
   private fun anniversaryInYear(year: Int): LocalDate {
-    return if (startDate.monthNumber == 2 && startDate.dayOfMonth == 29) {
+    return if (startDate.month.number == 2 && startDate.day == 29) {
       // For Feb 29 starts, use Feb 29 on leap years, otherwise Feb 28
       if (isLeapYear(year)) LocalDate(year, 2, 29) else LocalDate(year, 2, 28)
     } else {
-      LocalDate(year, startDate.monthNumber, startDate.dayOfMonth)
+      LocalDate(year, startDate.month.number, startDate.day)
     }
   }
 
