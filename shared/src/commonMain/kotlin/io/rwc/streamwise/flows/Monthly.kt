@@ -19,9 +19,9 @@ import kotlin.math.abs
 @Serializable
 data class Monthly(
   val name: String,
-  private val dayOffset: Int,
+  val dayOffset: Int,
   @Serializable(with = BigDecimalHumanReadableSerializer::class)
-  private val amount: BigDecimal,
+  val amount: BigDecimal,
 ) : CashFlow {
   init {
     require(dayOffset != 0) { "Day offset cannot be zero" }

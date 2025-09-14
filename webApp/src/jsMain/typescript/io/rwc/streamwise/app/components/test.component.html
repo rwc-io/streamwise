@@ -1,10 +1,13 @@
-<div>
+<div class="chart-container" style="position: relative; width:90%; height: 70%;">
   <canvas baseChart [data]="chartData()" [options]="barChartOptions" [type]="'line'"></canvas>
+  <!--
+  This extra space element is required to get auto chart resizing working.
+
+  Workaround:
+  https://github.com/chartjs/Chart.js/issues/11005#issuecomment-1433478026
+
+  better solution: aspect ratio?
+  https://github.com/chartjs/Chart.js/issues/11005#issuecomment-1475697112
+  -->
+  <div>&nbsp;</div>
 </div>
-<div>
-  Flows available:<br/>
-  @for (item of flowsService.flowBundles(); track item.id) {
-    {{ item.id }}: {{ item.name }} <br/>
-  }
-</div>
-<div><p>&nbsp;</p></div>

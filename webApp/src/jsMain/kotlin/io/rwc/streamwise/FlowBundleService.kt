@@ -13,7 +13,22 @@ import kotlinx.datetime.LocalDate
 import kotlinx.serialization.KSerializer
 
 class FlowBundleService {
+  private var flowsCollector: Job? = null
   private var monthlysCollector: Job? = null
+
+  fun bundlesToFlows(bundles: Array<FlowBundle>, targetFlows: WritableSignal<Array<CashFlow>>) {
+    val subCollectionFlows = listOf(
+      bundles.readCashFlows("fixedFlows", Fixed.serializer()),
+      bundles.readCashFlows("monthlyFlows", Monthly.serializer()),
+    )
+    val bundleFlows = combine(subCollectionFlows) { flowLists -> flowLists.flatMap { it } }
+
+    flowsCollector = CoroutineScope(Dispatchers.Main).launch {
+      bundleFlows.collectLatest { flows ->
+        targetFlows.set(flows.toTypedArray())
+      }
+    }
+  }
 
   fun start(
     targetBalances: WritableSignal<Array<Fixed>>,
@@ -37,6 +52,9 @@ class FlowBundleService {
   }
 
   fun stop() {
+    flowsCollector?.cancel()
+    flowsCollector = null
+
     monthlysCollector?.cancel()
     monthlysCollector = null
   }

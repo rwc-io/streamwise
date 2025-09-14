@@ -1,5 +1,18 @@
 
-div.header {
-    display: flex;
+mat-toolbar {
     background-color: #AFDAC0;
+}
+
+main {
+    display: flex;
+    flex-direction: column; /* Stacks children vertically */
+    height: 100vh;
+
+    div.header {
+        flex: 0 1 auto; /* Header and footer take up their natural height */
+    }
+
+    div.content {
+        flex: 1 1 auto; /* Content area expands to fill remaining space */
+    }
 }
