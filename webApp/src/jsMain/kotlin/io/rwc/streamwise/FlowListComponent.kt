@@ -2,6 +2,7 @@ package io.rwc.streamwise
 
 import io.rwc.streamwise.flows.CashFlow
 import io.rwc.streamwise.flows.FlowBundle
+import io.rwc.streamwise.flows.describe
 import kangular.core.AngularWritable
 
 @OptIn(ExperimentalJsExport::class)
@@ -17,10 +18,10 @@ class FlowListComponent(ngFlowsSignal: dynamic) {
 
   @Suppress("unused", "non_exportable_type")
   fun describe(flow: CashFlow): String {
-    return when (flow) {
-      is io.rwc.streamwise.flows.Fixed -> "Fixed on ${flow.date}: ${flow.amount}"
-      is io.rwc.streamwise.flows.Monthly -> "Monthly ${flow.name} on day offset ${flow.dayOffset}: ${flow.amount}"
-      else -> "Unknown flow type"
+    return try {
+      flow.describe()
+    } catch (e: Exception) {
+      "Unknown flow type"
     }
   }
 
