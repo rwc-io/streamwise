@@ -16,8 +16,6 @@ import kotlin.js.JsExport
  * - skip = 1 → every 2 weeks
  * - skip = 2 → every 3 weeks
  */
-@OptIn(ExperimentalJsExport::class)
-@JsExport
 @Serializable
 data class Weekly(
   val name: String,

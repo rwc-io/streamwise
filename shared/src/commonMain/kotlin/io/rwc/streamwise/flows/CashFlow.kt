@@ -6,7 +6,7 @@ import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.plus
 
-interface CashFlow {
+sealed interface CashFlow {
   fun valueOn(date: LocalDate): BigDecimal
 }
 
