@@ -6,15 +6,17 @@ import external.ChartDataset
 import io.rwc.streamwise.flows.Fixed
 import io.rwc.streamwise.flows.FlowBundle
 import kangular.core.AngularWritable
+import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.plus
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
 class TestComponent(ngBalancesSignal: dynamic) {
   private val balancesSignal = AngularWritable<Array<Fixed>>(ngBalancesSignal)
 
-  private val startDate = LocalDate(2025, 1, 1)
-  private val endDate = LocalDate(2026, 12, 31)
+  private val startDate = LocalDate(2025, 9, 13)
+  private val endDate = startDate.plus(DatePeriod(years = 2))
 
   private val flowBundleService = FlowBundleService()
 
