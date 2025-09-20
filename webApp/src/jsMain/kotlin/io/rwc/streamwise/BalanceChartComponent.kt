@@ -12,7 +12,7 @@ import kotlinx.datetime.plus
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-class TestComponent(ngBalancesSignal: dynamic) {
+class BalanceChartComponent(ngBalancesSignal: dynamic) {
   private val balancesSignal = AngularWritable<Array<Fixed>>(ngBalancesSignal)
 
   private val startDate = LocalDate(2025, 9, 13)

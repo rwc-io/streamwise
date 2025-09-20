@@ -5,12 +5,12 @@ import * as streamwise from '@streamwise';
 import {FlowsService} from "../flows/flows-service";
 
 @Component({
-  templateUrl: './test.component.html',
+  templateUrl: './balance-chart.component.html',
   standalone: true,
   imports: [BaseChartDirective],
-  selector: 'test-component',
+  selector: 'balance-chart',
 })
-class TestComponent extends streamwise.TestComponent {
+class BalanceChartComponent extends streamwise.BalanceChartComponent {
   readonly flowsService = inject(FlowsService);
 
   constructor() {
@@ -27,4 +27,4 @@ class TestComponent extends streamwise.TestComponent {
   chartData = computed(() => this.computeChartData(this.balances()));
 }
 
-export {TestComponent};
+export {BalanceChartComponent};

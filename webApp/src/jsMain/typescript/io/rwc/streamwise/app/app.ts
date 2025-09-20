@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {RouterOutlet} from '@angular/router';
 
 import * as streamwise from '@streamwise';
-import {TestComponent} from "./components/test.component";
+import {BalanceChartComponent} from "./components/balance-chart.component";
 import {AuthComponent} from "./components/auth.component";
 import {MatDrawer, MatDrawerContainer} from "@angular/material/sidenav";
 import {MatIconButton} from "@angular/material/button";
@@ -14,7 +14,7 @@ streamwise.checkAuthRedirectResult()
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, AuthComponent, TestComponent, MatDrawerContainer, MatDrawer, MatToolbar, MatIcon, MatIconButton, FlowListComponent],
+  imports: [RouterOutlet, AuthComponent, BalanceChartComponent, MatDrawerContainer, MatDrawer, MatToolbar, MatIcon, MatIconButton, FlowListComponent, BalanceChartComponent],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
