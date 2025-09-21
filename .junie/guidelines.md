@@ -37,6 +37,21 @@ Coding conventions
 - Numeric types: Monetary values use ION‑Spin BigDecimal; avoid Double for money.
 - Tests: Add or update tests under shared/src/commonTest for domain changes.
 
+Accessing Angular state:
+- Kotlin cannot access Angular state directly. Kotlin code should not attempt to read the Angular signals.
+- Signals may only be read in Angular/TypeScript code. The read value should be passed to Kotlin.
+- Kotlin code may write Angular signals.
+- Angular signals should be passed to the Kotlin component using the constructor. Avoid ngOnInit.
+  - Sometimes this means the signal must be instantiated in the TypeScript constructor (not the main class body).
+
+Angular component design:
+- Components are implemented in TypeScript, inheriting from a Kotlin-generated base class.
+- The TypeScript component must handle all state-related actions (eg. reading signals).
+  - Signal reads in Kotlin don't get registered with the lifecycle hooks.
+- To make writeable signals available to Kotlin, pass them in the constructor.
+- To make readable signals available to Kotlin, read them in TypeScript and pass the value to a Kotlin function.
+- For example, an Angular computed signal is implemented as a call to a Kotlin function, passing in dependent signal reads.
+
 What is a cash flow?
 - A cash flow represents some amount of money on some date.
 - Types of cash flows include Fixed (one-time), Weekly, Monthly, etc.
