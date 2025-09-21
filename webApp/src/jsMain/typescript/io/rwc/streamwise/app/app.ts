@@ -29,7 +29,7 @@ export class App extends streamwise.App {
     super()
 
     effect(() => {
-      this.realizeFlowsToBalances(this.balances, this.flowsService.flowBundles())
+      this.realizeFlowsToBalances(this.balances, this.flowsService.flows())
     });
   }
 }

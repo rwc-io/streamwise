@@ -6,13 +6,14 @@ import dev.gitlive.firebase.auth.js
 import kangular.core.AngularWritable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
 class AuthService(currentUserNgSignal: dynamic) {
   private val auth = StreamFire.instance.auth
-  private var authCollector: kotlinx.coroutines.Job? = null
+  private var authCollector: Job? = null
 
   private val currentAuth = AngularWritable<User?>(ngSignal = currentUserNgSignal)
 

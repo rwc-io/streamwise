@@ -1,21 +1,11 @@
 package io.rwc.streamwise
 
 import io.rwc.streamwise.flows.CashFlow
-import io.rwc.streamwise.flows.FlowBundle
 import io.rwc.streamwise.flows.describe
-import kangular.core.AngularWritable
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-class FlowListComponent(ngFlowsSignal: dynamic) {
-  private val flowsSignal = AngularWritable<Array<CashFlow>>(ngFlowsSignal)
-  private val flowsRealizerService = FlowsRealizerService()
-
-  @Suppress("unused")
-  fun listenToFlows(bundles: Array<FlowBundle>) {
-    flowsRealizerService.bundlesToFlows(bundles, flowsSignal)
-  }
-
+class FlowListComponent {
   @Suppress("unused", "non_exportable_type")
   fun describe(flow: CashFlow): String {
     return try {
@@ -23,10 +13,5 @@ class FlowListComponent(ngFlowsSignal: dynamic) {
     } catch (e: Exception) {
       "Unknown flow type"
     }
-  }
-
-  @Suppress("unused")
-  fun ngOnDestroy() {
-    flowsRealizerService.stop()
   }
 }

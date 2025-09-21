@@ -1,4 +1,4 @@
-import {Injectable, signal, WritableSignal} from '@angular/core';
+import {Injectable, Signal, signal, WritableSignal} from '@angular/core';
 
 import * as streamwise from '@streamwise';
 
@@ -8,9 +8,12 @@ import * as streamwise from '@streamwise';
 export class FlowsService extends streamwise.FlowsService {
   constructor() {
     const ngFlowBundlesSignal: WritableSignal<Array<any>> = signal([])
-    super(ngFlowBundlesSignal)
+    const ngFlowsSignal: WritableSignal<Array<any>> = signal([])
+    super(ngFlowBundlesSignal, ngFlowsSignal)
     this.flowBundles = ngFlowBundlesSignal;
+    this.flows = ngFlowsSignal;
   }
 
-  readonly flowBundles;
+  readonly flowBundles: Signal<Array<any>>;
+  readonly flows: Signal<Array<any>>;
 }

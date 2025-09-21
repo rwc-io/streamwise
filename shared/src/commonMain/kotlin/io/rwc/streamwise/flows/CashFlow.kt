@@ -35,11 +35,16 @@ fun makeSomeBalances(startDate: LocalDate, endDate: LocalDate): List<Fixed> {
   return accumulateFlows(flows, startDate, endDate)
 }
 
-fun accumulateFlows(flows: List<CashFlow>, startDate: LocalDate, endDate: LocalDate, startingBalance: BigDecimal = 0.toBigDecimal()): List<Fixed> {
+fun accumulateFlows(
+  flows: List<CashFlow>,
+  startDate: LocalDate,
+  endDate: LocalDate,
+  startingBalance: BigDecimal = 0.toBigDecimal(),
+): List<Fixed> {
   val cashFlow = reifyFlows(flows, startDate, endDate)
   var runningTotal = startingBalance
   return cashFlow.sortedBy { it.date }.map {
     runningTotal += it.amount
-    Fixed(date = it.date,runningTotal)
+    Fixed(date = it.date, runningTotal)
   }
 }

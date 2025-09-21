@@ -1,5 +1,4 @@
-import {Component, computed, effect, inject, signal, WritableSignal} from "@angular/core";
-import {BaseChartDirective} from "ng2-charts";
+import {Component, inject, Signal} from "@angular/core";
 
 import * as streamwise from '@streamwise';
 import {FlowsService} from "../flows/flows-service";
@@ -14,16 +13,10 @@ class FlowListComponent extends streamwise.FlowListComponent {
   readonly flowsService = inject(FlowsService);
 
   constructor() {
-    const theFlows: WritableSignal<Array<any>> = signal([]);
-    super(theFlows);
-    this.flows = theFlows;
-
-    effect(() => {
-      this.listenToFlows(this.flowsService.flowBundles())
-    });
+    super();
   }
 
-  flows ;
+  flows: Signal<Array<any>> = this.flowsService.flows;
 }
 
 export {FlowListComponent};
