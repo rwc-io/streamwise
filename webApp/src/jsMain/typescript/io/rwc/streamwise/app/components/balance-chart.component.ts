@@ -1,8 +1,7 @@
-import {Component, computed, effect, inject, signal, WritableSignal} from "@angular/core";
+import {Component, computed, input} from "@angular/core";
 import {BaseChartDirective} from "ng2-charts";
 
 import * as streamwise from '@streamwise';
-import {FlowsService} from "../flows/flows-service";
 
 @Component({
   templateUrl: './balance-chart.component.html',
@@ -11,19 +10,12 @@ import {FlowsService} from "../flows/flows-service";
   selector: 'balance-chart',
 })
 class BalanceChartComponent extends streamwise.BalanceChartComponent {
-  readonly flowsService = inject(FlowsService);
+  balances = input.required<Array<any>>()
 
   constructor() {
-    const theBalances: WritableSignal<Array<any>> = signal([]);
-    super(theBalances);
-    this.balances = theBalances;
-
-    effect(() => {
-      this.listenToBalances(this.flowsService.flowBundles())
-    });
+    super();
   }
 
-  balances: WritableSignal<Array<any>>;
   chartData = computed(() => this.computeChartData(this.balances()));
 }
 

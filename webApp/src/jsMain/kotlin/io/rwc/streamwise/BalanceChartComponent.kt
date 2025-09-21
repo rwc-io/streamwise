@@ -12,14 +12,7 @@ import kotlinx.datetime.plus
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-class BalanceChartComponent(ngBalancesSignal: dynamic) {
-  private val balancesSignal = AngularWritable<Array<Fixed>>(ngBalancesSignal)
-
-  private val startDate = LocalDate(2025, 9, 13)
-  private val endDate = startDate.plus(DatePeriod(years = 2))
-
-  private val flowBundleService = FlowBundleService()
-
+class BalanceChartComponent() {
   @Suppress("unused", "non_exportable_type")
   fun computeChartData(balances: Array<Fixed>): dynamic {
     return ChartData(
@@ -51,25 +44,4 @@ class BalanceChartComponent(ngBalancesSignal: dynamic) {
       "tooltip" to currencyTooltip
     )
   )
-
-  @Suppress("unused")
-  fun ngOnInit() {
-    BigDecimal.useToStringExpanded = true
-  }
-
-  @Suppress("unused")
-  fun ngOnDestroy() {
-    flowBundleService.stop()
-  }
-
-  @Suppress("unused")
-  fun listenToBalances(flowBundles: Array<FlowBundle>) {
-    console.log("Recomputing balances")
-    flowBundleService.start(
-      targetBalances = balancesSignal,
-      bundles = flowBundles,
-      startDate = startDate,
-      endDate = endDate,
-    )
-  }
 }

@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, effect, inject, signal, WritableSignal} from '@angular/core';
 import {RouterOutlet} from '@angular/router';
 
 import * as streamwise from '@streamwise';
@@ -9,6 +9,7 @@ import {MatIconButton} from "@angular/material/button";
 import {MatToolbar} from "@angular/material/toolbar";
 import {MatIcon} from "@angular/material/icon";
 import {FlowListComponent} from "./components/flow-list.component";
+import {FlowsService} from "./flows/flows-service";
 
 streamwise.checkAuthRedirectResult()
 
@@ -18,9 +19,17 @@ streamwise.checkAuthRedirectResult()
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App {
+export class App extends streamwise.App {
   protected title = 'streamwise';
 
+  readonly flowsService = inject(FlowsService);
+  readonly balances: WritableSignal<Array<any>> = signal([]);
+
   constructor() {
+    super()
+
+    effect(() => {
+      this.realizeFlowsToBalances(this.balances, this.flowsService.flowBundles())
+    });
   }
 }

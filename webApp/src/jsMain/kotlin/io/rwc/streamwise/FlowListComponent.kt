@@ -9,11 +9,11 @@ import kangular.core.AngularWritable
 @JsExport
 class FlowListComponent(ngFlowsSignal: dynamic) {
   private val flowsSignal = AngularWritable<Array<CashFlow>>(ngFlowsSignal)
-  private val flowBundleService = FlowBundleService()
+  private val flowsRealizerService = FlowsRealizerService()
 
   @Suppress("unused")
   fun listenToFlows(bundles: Array<FlowBundle>) {
-    flowBundleService.bundlesToFlows(bundles, flowsSignal)
+    flowsRealizerService.bundlesToFlows(bundles, flowsSignal)
   }
 
   @Suppress("unused", "non_exportable_type")
@@ -27,6 +27,6 @@ class FlowListComponent(ngFlowsSignal: dynamic) {
 
   @Suppress("unused")
   fun ngOnDestroy() {
-    flowBundleService.stop()
+    flowsRealizerService.stop()
   }
 }
