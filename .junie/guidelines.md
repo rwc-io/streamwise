@@ -32,7 +32,11 @@ Data model
 - Cash flow bundles' flows reference the cash flow owner for access control.
 
 Coding conventions
-- Kotlin: Follow idiomatic Kotlin style; prefer immutable data structures and pure functions for domain logic.
+- Kotlin:
+  - Follow idiomatic Kotlin style; prefer immutable data structures and pure functions for domain logic.
+  - Avoid fully-qualified class names. Add import statements as necessary.
+  - When possible, apply the IDE file reformat command to modified files.
+
 - Serialization: Use kotlinx.serialization annotations already present; keep types stable across JS interop (avoid non-exportable types in @JsExport APIs).
 - Numeric types: Monetary values use ION‑Spin BigDecimal; avoid Double for money.
 - Tests: Add or update tests under shared/src/commonTest for domain changes.
