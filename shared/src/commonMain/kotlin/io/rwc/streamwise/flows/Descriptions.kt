@@ -8,7 +8,19 @@ package io.rwc.streamwise.flows
  */
 fun CashFlow.describe(): String = when (this) {
   is Fixed -> "Fixed on ${this.date}: ${this.amount}"
-  is Monthly -> "Monthly ${this.name} on day offset ${this.dayOffset}: ${this.amount}"
-  is Weekly -> "Weekly ${this.name} starting ${this.startDate} (every ${this.skip + 1} week${if (this.skip == 0) "" else "s"}): ${this.amount}"
-  is Yearly -> "Yearly ${this.name} starting ${this.startDate} (every ${this.skip + 1} year${if (this.skip == 0) "" else "s"}): ${this.amount}"
+  is Monthly -> describeMonthly(this)
+  is Weekly -> describeWeekly(this)
+  is Yearly -> describeYearly(this)
+}
+
+fun describeMonthly(flow: Monthly): String {
+  return "Monthly ${flow.name} on day offset ${flow.dayOffset}: ${flow.amount}"
+}
+
+fun describeWeekly(flow: Weekly): String {
+  return "Weekly ${flow.name} starting ${flow.startDate} (every ${flow.skip + 1} week${if (flow.skip == 0) "" else "s"}): ${flow.amount}"
+}
+
+fun describeYearly(flow: Yearly): String {
+  return "Yearly ${flow.name} starting ${flow.startDate} (every ${flow.skip + 1} year${if (flow.skip == 0) "" else "s"}): ${flow.amount}"
 }
