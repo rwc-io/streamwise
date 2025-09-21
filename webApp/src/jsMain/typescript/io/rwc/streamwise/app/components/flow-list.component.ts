@@ -1,7 +1,6 @@
-import {Component, inject, Signal} from "@angular/core";
+import {Component, input} from "@angular/core";
 
 import * as streamwise from '@streamwise';
-import {FlowsService} from "../flows/flows-service";
 
 @Component({
   templateUrl: './flow-list.component.html',
@@ -10,13 +9,11 @@ import {FlowsService} from "../flows/flows-service";
   selector: 'flow-list',
 })
 class FlowListComponent extends streamwise.FlowListComponent {
-  readonly flowsService = inject(FlowsService);
+  flows = input.required<Array<any>>();
 
   constructor() {
     super();
   }
-
-  flows: Signal<Array<any>> = this.flowsService.flows;
 }
 
 export {FlowListComponent};

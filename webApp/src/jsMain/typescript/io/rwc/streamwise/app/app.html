@@ -25,7 +25,7 @@ https://material.angular.dev/components/sidenav/examples#sidenav-responsive
   <div class="content">
     <mat-drawer-container class="content-menu" autosize >
       <mat-drawer #drawer class="side-menu" mode="side">
-        <flow-list/>
+        <flow-list [flows]="flowsService.flows()"/>
       </mat-drawer>
 
       <div class="content-main">
