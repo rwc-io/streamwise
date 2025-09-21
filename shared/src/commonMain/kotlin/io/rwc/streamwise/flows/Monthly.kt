@@ -22,6 +22,7 @@ data class Monthly(
   val dayOffset: Int,
   @Serializable(with = BigDecimalHumanReadableSerializer::class)
   val amount: BigDecimal,
+  val id: String = "",
 ) : CashFlow {
   init {
     require(dayOffset != 0) { "Day offset cannot be zero" }

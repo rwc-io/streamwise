@@ -111,9 +111,14 @@ fun <T : CashFlow> Array<FlowBundle>.readCashFlows(type: String, serializer: KSe
     snapshotsArray.flatMap { snapshot ->
       snapshot.documents.mapNotNull { doc ->
         try {
-          doc.data(serializer)
+          when (val flow = doc.data(serializer)) {
+            is Fixed -> flow.copy(id = doc.id)
+            is Monthly -> flow.copy(id = doc.id)
+            is Weekly -> flow.copy(id = doc.id)
+            is Yearly -> flow.copy(id = doc.id)
+          }
         } catch (e: Exception) {
-          console.error("Error deserializing Fixed from doc ${doc.id}: $e. Cause: ${e.cause}")
+          console.error("Error deserializing flow from doc ${doc.id}: $e. Cause: ${e.cause}")
           null
         }
       }

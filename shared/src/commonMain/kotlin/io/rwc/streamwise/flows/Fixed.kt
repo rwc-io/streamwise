@@ -11,6 +11,7 @@ data class Fixed(
   val date: LocalDate,
   @Serializable(with = BigDecimalHumanReadableSerializer::class)
   val amount: BigDecimal,
+  val id: String = "",
 ) : CashFlow {
   override fun valueOn(date: LocalDate): BigDecimal {
     return if (this@Fixed.date == date) {
