@@ -50,6 +50,8 @@ Accessing Angular state:
 
 Angular component design:
 - Components are implemented in TypeScript, inheriting from a Kotlin-generated base class.
+  - Whenever possible, implement logic in Kotlin. The TypeScript (or HTML) code should use methods available from the superclass rather than defining them in TypeScript.
+
 - The TypeScript component must handle all state-related actions (eg. reading signals).
   - Signal reads in Kotlin don't get registered with the lifecycle hooks.
 - To make writeable signals available to Kotlin, pass them in the constructor.
