@@ -23,6 +23,7 @@ data class Yearly(
   @Serializable(with = BigDecimalHumanReadableSerializer::class)
   val amount: BigDecimal,
   val skip: Int = 0,
+  val id: String = "",
 ) : CashFlow {
   init {
     require(skip >= 0) { "Skip cannot be negative" }

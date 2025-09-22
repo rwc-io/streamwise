@@ -1,6 +1,10 @@
 <div>
   Flows available:<br/>
   @for (item of flows(); track $index) {
-    {{ describe(item) }} <br/>
+    <span (click)="toggle(item)" [style.cursor]="'pointer'"
+          [style.textDecoration]="isExcluded(item) ? 'line-through' : 'none'">
+      {{ describe(item) }}
+    </span>
+    <br/>
   }
 </div>

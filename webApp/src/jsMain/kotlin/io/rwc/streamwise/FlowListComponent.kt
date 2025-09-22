@@ -1,19 +1,21 @@
 package io.rwc.streamwise
 
 import io.rwc.streamwise.flows.CashFlow
-import io.rwc.streamwise.flows.FlowBundle
 import io.rwc.streamwise.flows.describe
 import kangular.core.AngularWritable
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-class FlowListComponent(ngFlowsSignal: dynamic) {
-  private val flowsSignal = AngularWritable<Array<CashFlow>>(ngFlowsSignal)
-  private val flowBundleService = FlowBundleService()
+class FlowListComponent(excludedFlowsNgSignal: dynamic) {
+  // For communicating the output:
+  private val excludedFlowsSignal = AngularWritable<Set<CashFlow>>(excludedFlowsNgSignal)
 
-  @Suppress("unused")
-  fun listenToFlows(bundles: Array<FlowBundle>) {
-    flowBundleService.bundlesToFlows(bundles, flowsSignal)
+  // For internal state tracking:
+  private val excludedFlows: MutableSet<CashFlow> = mutableSetOf()
+
+  init {
+    // Initialize the output signal with the empty set
+    excludedFlowsSignal.set(excludedFlows)
   }
 
   @Suppress("unused", "non_exportable_type")
@@ -26,7 +28,18 @@ class FlowListComponent(ngFlowsSignal: dynamic) {
   }
 
   @Suppress("unused")
-  fun ngOnDestroy() {
-    flowBundleService.stop()
+  fun toggle(flow: CashFlow) {
+    if (excludedFlows.contains(flow)) {
+      excludedFlows.remove(flow)
+    } else {
+      excludedFlows.add(flow)
+    }
+
+    excludedFlowsSignal.set(excludedFlows.toSet())
+  }
+
+  @Suppress("unused")
+  fun isExcluded(flow: CashFlow): Boolean {
+    return excludedFlows.contains(flow)
   }
 }
