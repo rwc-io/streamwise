@@ -1,4 +1,3 @@
-
 <!--
 Get responsive sidenav with "over" mode on small screens from:
 https://material.angular.dev/components/sidenav/examples#sidenav-responsive
@@ -23,9 +22,9 @@ https://material.angular.dev/components/sidenav/examples#sidenav-responsive
     </mat-toolbar>
   </div>
   <div class="content">
-    <mat-drawer-container class="content-menu" autosize >
+    <mat-drawer-container class="content-menu" autosize>
       <mat-drawer #drawer class="side-menu" mode="side">
-        <flow-list [flows]="flowsService.flows()"/>
+        <flow-list [flows]="flowsService.flows()" (outputExcludedFlows)="onExcludedFlows($event)"/>
       </mat-drawer>
 
       <div class="content-main">

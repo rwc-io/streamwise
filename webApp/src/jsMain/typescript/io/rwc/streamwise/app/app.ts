@@ -1,4 +1,4 @@
-import {Component, effect, inject, signal, WritableSignal} from '@angular/core';
+import {Component, computed, inject, signal, WritableSignal} from '@angular/core';
 import {RouterOutlet} from '@angular/router';
 
 import * as streamwise from '@streamwise';
@@ -23,13 +23,13 @@ export class App extends streamwise.App {
   protected title = 'streamwise';
 
   readonly flowsService = inject(FlowsService);
-  readonly balances: WritableSignal<Array<any>> = signal([]);
+  readonly excluded: WritableSignal<any>;
 
   constructor() {
-    super()
-
-    effect(() => {
-      this.realizeFlowsToBalances(this.balances, this.flowsService.flows())
-    });
+    const theExcludedSignal = signal<any>({});
+    super(theExcludedSignal)
+    this.excluded = theExcludedSignal;
   }
+
+  readonly balances = computed(() => this.realizeFlowsToBalances(this.flowsService.flows(), this.excluded()))
 }
