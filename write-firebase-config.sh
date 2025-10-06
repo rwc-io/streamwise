@@ -1,11 +1,13 @@
 #!/bin/bash
 
+# Write the overall firebase config:
+
 jq -n \
   --arg FIREBASE_PROJECT_ID "$FIREBASE_PROJECT_ID" \
   -f .firebaserc.jq \
   > .firebaserc
 
-#!/bin/bash
+# Write the json file loaded by the angular build:
 
 jq -n \
   --arg FIREBASE_PROJECT_ID "$FIREBASE_PROJECT_ID" \
