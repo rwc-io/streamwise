@@ -3,9 +3,14 @@
   @for (item of flows(); track $index) {
     <div class="flow-item">
       <mat-icon [style.cursor]="'pointer'"
-                (click)="toggle(item)"
+                (click)="toggleFlow(item)"
                 aria-hidden="false" aria-label="icon"
                 [fontIcon]="isExcluded(item) ? 'visibility_off' : 'visibility'"
+      ></mat-icon>
+      <mat-icon [style.cursor]="'pointer'"
+                (click)="editFlow(item)"
+                aria-hidden="false" aria-label="icon"
+                [fontIcon]="'edit'"
       ></mat-icon>
       <span [class]="isExcluded(item) ? 'flow-excluded' : 'flow-included'">
         {{ describe(item) }}

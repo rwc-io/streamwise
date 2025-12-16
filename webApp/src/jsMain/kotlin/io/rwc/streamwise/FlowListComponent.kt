@@ -1,8 +1,13 @@
 package io.rwc.streamwise
 
 import io.rwc.streamwise.flows.CashFlow
+import io.rwc.streamwise.flows.Fixed
+import io.rwc.streamwise.flows.FlowsDbJs
 import io.rwc.streamwise.flows.describe
 import kangular.core.AngularWritable
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
@@ -28,7 +33,7 @@ class FlowListComponent(excludedFlowsNgSignal: dynamic) {
   }
 
   @Suppress("unused")
-  fun toggle(flow: CashFlow) {
+  fun toggleFlow(flow: CashFlow) {
     if (excludedFlows.contains(flow)) {
       excludedFlows.remove(flow)
     } else {
@@ -36,6 +41,16 @@ class FlowListComponent(excludedFlowsNgSignal: dynamic) {
     }
 
     excludedFlowsSignal.set(excludedFlows.toSet())
+  }
+
+  @Suppress("unused")
+  fun editFlow(flow: CashFlow) {
+    if (flow is Fixed) {
+      val toggled = flow.copy(amount = flow.amount * -1)
+      CoroutineScope(Dispatchers.Default).launch {
+        FlowsDbJs.saveFlow(StreamFire.instance.firestore, toggled)
+      }
+    }
   }
 
   @Suppress("unused")
