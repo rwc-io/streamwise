@@ -1,10 +1,15 @@
-<div>
+<div class="flow-list">
   Flows available:<br/>
   @for (item of flows(); track $index) {
-    <span (click)="toggle(item)" [style.cursor]="'pointer'"
-          [style.textDecoration]="isExcluded(item) ? 'line-through' : 'none'">
-      {{ describe(item) }}
-    </span>
-    <br/>
+    <div class="flow-item">
+      <mat-icon [style.cursor]="'pointer'"
+                (click)="toggle(item)"
+                aria-hidden="false" aria-label="icon"
+                [fontIcon]="isExcluded(item) ? 'visibility_off' : 'visibility'"
+      ></mat-icon>
+      <span [class]="isExcluded(item) ? 'flow-excluded' : 'flow-included'">
+        {{ describe(item) }}
+      </span>
+    </div>
   }
 </div>

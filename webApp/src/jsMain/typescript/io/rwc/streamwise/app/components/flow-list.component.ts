@@ -1,11 +1,15 @@
 import {Component, effect, input, output, signal} from "@angular/core";
 
 import * as streamwise from '@streamwise';
+import {MatIconModule} from '@angular/material/icon';
 
 @Component({
   templateUrl: './flow-list.component.html',
+  styleUrls: ['./flow-list.component.scss'],
   standalone: true,
-  imports: [],
+  imports: [
+    MatIconModule
+  ],
   selector: 'flow-list',
 })
 class FlowListComponent extends streamwise.FlowListComponent {
