@@ -35,9 +35,13 @@ kotlin {
       // put your Multiplatform dependencies here
       implementation(libs.bignum)
       implementation(libs.bignum.serialization)
+      implementation(libs.kotlinx.coroutines)
       implementation(libs.kotlinx.datetime)
       implementation(libs.kotlinx.serialization.json)
 
+      implementation(libs.kotlin.logging)
+
+      implementation(libs.gitlive.firebase.firestore)
     }
     commonTest.dependencies {
       implementation(libs.kotlin.test)

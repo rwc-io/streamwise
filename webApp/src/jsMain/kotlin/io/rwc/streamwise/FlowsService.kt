@@ -1,20 +1,13 @@
 package io.rwc.streamwise
 
-import io.rwc.streamwise.flows.CashFlow
-import io.rwc.streamwise.flows.Monthly
-import io.rwc.streamwise.flows.Yearly
-import io.rwc.streamwise.flows.Fixed
-import io.rwc.streamwise.flows.Weekly
-import io.rwc.streamwise.flows.FlowBundle
+import io.rwc.streamwise.flows.*
 import kangular.core.AngularWritable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
-import kotlinx.serialization.KSerializer
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
@@ -71,11 +64,13 @@ class FlowsService(ngFlowBundlesSignal: dynamic, ngFlowsSignal: dynamic) {
       return
     }
 
+    val db = StreamFire.instance.firestore
+
     val subCollectionFlows = listOf(
-      bundles.readCashFlows("fixedFlows", Fixed.serializer()),
-      bundles.readCashFlows("monthlyFlows", Monthly.serializer()),
-      bundles.readCashFlows("weeklyFlows", Weekly.serializer()),
-      bundles.readCashFlows("yearlyFlows", Yearly.serializer()),
+      bundles.readCashFlows(db, "fixedFlows", Fixed.serializer()),
+      bundles.readCashFlows(db, "monthlyFlows", Monthly.serializer()),
+      bundles.readCashFlows(db, "weeklyFlows", Weekly.serializer()),
+      bundles.readCashFlows(db, "yearlyFlows", Yearly.serializer()),
     )
     val bundleFlows = combine(subCollectionFlows) { flowLists -> flowLists.flatMap { it } }
 
@@ -101,27 +96,3 @@ class FlowsService(ngFlowBundlesSignal: dynamic, ngFlowsSignal: dynamic) {
   }
 }
 
-fun <T : CashFlow> Array<FlowBundle>.readCashFlows(type: String, serializer: KSerializer<T>): Flow<List<CashFlow>> {
-  val db = StreamFire.instance.firestore
-
-  return combine(this.map { bundle ->
-    val doc = db.collection("flowBundles").document(bundle.id).collection(type)
-    doc.snapshots
-  }) { snapshotsArray ->
-    snapshotsArray.flatMap { snapshot ->
-      snapshot.documents.mapNotNull { doc ->
-        try {
-          when (val flow = doc.data(serializer)) {
-            is Fixed -> flow.copy(id = doc.id)
-            is Monthly -> flow.copy(id = doc.id)
-            is Weekly -> flow.copy(id = doc.id)
-            is Yearly -> flow.copy(id = doc.id)
-          }
-        } catch (e: Exception) {
-          console.error("Error deserializing flow from doc ${doc.id}: $e. Cause: ${e.cause}")
-          null
-        }
-      }
-    }
-  }
-}
