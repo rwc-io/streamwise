@@ -1,22 +1,30 @@
 package io.rwc.streamwise
 
-import io.rwc.streamwise.flows.CashFlow
-import io.rwc.streamwise.flows.Fixed
-import io.rwc.streamwise.flows.FlowsDbJs
-import io.rwc.streamwise.flows.describe
+import com.ionspin.kotlin.bignum.decimal.BigDecimal
+import external.luxon.DateTime
+import external.luxon.toLocalDate
+import io.rwc.streamwise.flows.*
 import kangular.core.AngularWritable
+import kangular.external.MatDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-class FlowListComponent(excludedFlowsNgSignal: dynamic) {
+class FlowListComponent(
+  ngDialog: MatDialog,
+  private val editFixedFlowModalComponent: dynamic,
+  excludedFlowsNgSignal: dynamic,
+) {
   // For communicating the output:
   private val excludedFlowsSignal = AngularWritable<Set<CashFlow>>(excludedFlowsNgSignal)
 
   // For internal state tracking:
   private val excludedFlows: MutableSet<CashFlow> = mutableSetOf()
+
+  private val dialog = kangular.material.dialog.MatDialog(ngDialog)
 
   init {
     // Initialize the output signal with the empty set
@@ -46,9 +54,23 @@ class FlowListComponent(excludedFlowsNgSignal: dynamic) {
   @Suppress("unused")
   fun editFlow(flow: CashFlow) {
     if (flow is Fixed) {
-      val toggled = flow.copy(amount = flow.amount * -1)
-      CoroutineScope(Dispatchers.Default).launch {
-        FlowsDbJs.saveFlow(StreamFire.instance.firestore, toggled)
+      val formData = EditFixedFlowDialogData(
+        date = DateTime.fromISO(flow.date.toString()),
+        amount = flow.amount.toStringExpanded(),
+      )
+
+      val x = dialog.open<Any, EditFixedFlowDialogData?>(editFixedFlowModalComponent, formData)
+      x.afterClosed().subscribe { result ->
+        if (result == null) return@subscribe
+
+        val newFlow = flow.copy(
+          date = result.date.toLocalDate(),
+          amount = BigDecimal.parseString(result.amount),
+        )
+
+        CoroutineScope(Dispatchers.Default).launch {
+          FlowsDbJs.saveFlow(StreamFire.instance.firestore, newFlow)
+        }
       }
     }
   }
