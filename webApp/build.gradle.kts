@@ -63,6 +63,7 @@ kotlin {
       implementation(npm("@firebase/app", libs.versions.firebase.app.get()))
       implementation(npm("@firebase/auth", libs.versions.firebase.auth.get()))
       implementation(npm("@firebase/firestore", libs.versions.firebase.firestore.get()))
+      implementation(npm("luxon", libs.versions.luxon.get()))
       implementation(npm("rxjs", libs.versions.rxjs.get()))
 
       implementation(libs.gitlive.firebase.auth)

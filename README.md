@@ -52,4 +52,8 @@ The emulator will maintain state in between runs (by reading/writing to a gitign
 
 ### Serve the web app
 
-TBD
+See the [web app README](./webApp/README.md).
+
+TLDR, from the webApp directory, run `ng serve`.
+
+You can also run `ng serve` from your IDE.

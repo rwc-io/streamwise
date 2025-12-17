@@ -26,6 +26,11 @@ class StreamFire {
         }
         return streamfireInstance!!
       }
+
+    init {
+      // Configuration. Consider moving config to initializers elsewhere.
+      initializeBigDecimal()
+    }
   }
 
   val firestore: FirebaseFirestore

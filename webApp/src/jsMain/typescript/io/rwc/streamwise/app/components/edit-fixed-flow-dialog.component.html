@@ -1,0 +1,29 @@
+<h2 mat-dialog-title>Edit fixed cashflow</h2>
+
+<mat-dialog-content>
+  <form #fixedForm (submit)="onSubmit($event)">
+    <mat-form-field>
+      <mat-label>Choose date</mat-label>
+      <input matInput [matDatepicker]="picker" [field]="flowForm.date"/>
+      <mat-hint>MM/DD/YYYY</mat-hint>
+      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Amount</mat-label>
+      <input matInput type="number" [field]="flowForm.amount"/>
+      @if (flowForm.amount().touched() && flowForm.amount().invalid()) {
+        <mat-error>
+          @for (error of flowForm.amount().errors(); track error) {
+            {{ error.message }}.
+          }
+        </mat-error>
+      }
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button (click)="dialogRef.close()">Cancel</button>
+  <button mat-button (click)="fixedForm.requestSubmit()">Save</button>
+</mat-dialog-actions>

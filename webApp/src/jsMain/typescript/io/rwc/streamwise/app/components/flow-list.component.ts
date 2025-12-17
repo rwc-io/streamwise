@@ -1,11 +1,17 @@
-import {Component, effect, input, output, signal} from "@angular/core";
+import {Component, effect, inject, input, output, signal} from "@angular/core";
 
 import * as streamwise from '@streamwise';
+import {MatIconModule} from '@angular/material/icon';
+import {MatDialog} from "@angular/material/dialog";
+import {EditFixedFlowDialog} from "./edit-fixed-flow-dialog.component";
 
 @Component({
   templateUrl: './flow-list.component.html',
+  styleUrls: ['./flow-list.component.scss'],
   standalone: true,
-  imports: [],
+  imports: [
+    MatIconModule
+  ],
   selector: 'flow-list',
 })
 class FlowListComponent extends streamwise.FlowListComponent {
@@ -14,7 +20,9 @@ class FlowListComponent extends streamwise.FlowListComponent {
 
   constructor() {
     const internalExcludedFlows = signal<any>(null)
-    super(internalExcludedFlows);
+    const dialog = inject(MatDialog);
+
+    super(dialog, EditFixedFlowDialog, internalExcludedFlows);
 
     // Emit through Angular output whenever the signal changes
     // We can't just write to the signal, because we need to pass that

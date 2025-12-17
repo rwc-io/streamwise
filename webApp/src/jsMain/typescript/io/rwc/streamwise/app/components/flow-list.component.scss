@@ -1,0 +1,14 @@
+div.flow-list {
+  div.flow-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  span.flow-excluded {
+    font-style: italic;
+    text-decoration: line-through;
+  }
+  span.flow-included {
+    font-style: inherit;
+  }
+}

@@ -5,8 +5,7 @@ import com.ionspin.kotlin.bignum.serialization.kotlinx.bigdecimal.BigDecimalHuma
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.daysUntil
 import kotlinx.serialization.Serializable
-import kotlin.js.ExperimentalJsExport
-import kotlin.js.JsExport
+import kotlinx.serialization.Transient
 
 /**
  * A cash flow that occurs on a weekly cadence, starting from a given date.
@@ -23,7 +22,7 @@ data class Weekly(
   @Serializable(with = BigDecimalHumanReadableSerializer::class)
   val amount: BigDecimal,
   val skip: Int = 0,
-  val id: String = "",
+  @Transient val dbRef: String = "",
 ) : CashFlow {
   init {
     require(skip >= 0) { "Skip cannot be negative" }

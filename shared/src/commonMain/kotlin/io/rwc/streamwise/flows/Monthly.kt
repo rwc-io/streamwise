@@ -6,6 +6,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.YearMonth
 import kotlinx.datetime.yearMonth
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import kotlin.math.abs
 
 
@@ -22,7 +23,7 @@ data class Monthly(
   val dayOffset: Int,
   @Serializable(with = BigDecimalHumanReadableSerializer::class)
   val amount: BigDecimal,
-  val id: String = "",
+  @Transient val dbRef: String = "",
 ) : CashFlow {
   init {
     require(dayOffset != 0) { "Day offset cannot be zero" }
