@@ -9,6 +9,7 @@ import kotlinx.serialization.Transient
 
 @Serializable
 data class Fixed(
+  val name: String,
   val date: LocalDate,
   @Serializable(with = BigDecimalHumanReadableSerializer::class)
   val amount: BigDecimal,
