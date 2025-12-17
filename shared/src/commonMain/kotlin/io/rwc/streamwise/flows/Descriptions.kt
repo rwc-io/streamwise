@@ -14,7 +14,7 @@ fun CashFlow.describe(): String = when (this) {
 }
 
 fun describeFixed(flow: Fixed): String {
-  return "Fixed on ${flow.date}: ${flow.amount.toStringExpanded()}"
+  return "${flow.name.ifEmpty { "Fixed" }} on ${flow.date}: ${flow.amount.toStringExpanded()}"
 }
 
 fun describeMonthly(flow: Monthly): String {

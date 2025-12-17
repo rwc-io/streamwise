@@ -16,7 +16,7 @@ fun reifyFlows(flows: List<CashFlow>, startDate: LocalDate, endDate: LocalDate):
   var date = startDate
   while (date <= endDate) {
     val dayAmount = flows.fold(0.toBigDecimal()) { total, flow -> total + flow.valueOn(date) }
-    cashFlow.add(Fixed(date, dayAmount))
+    cashFlow.add(Fixed(name = "FIXME-REIFIED", date = date, amount = dayAmount))
     date = date.plus(1, DateTimeUnit.DAY)
   }
 
@@ -25,7 +25,7 @@ fun reifyFlows(flows: List<CashFlow>, startDate: LocalDate, endDate: LocalDate):
 
 fun makeSomeBalances(startDate: LocalDate, endDate: LocalDate): List<Fixed> {
   val flows = listOf(
-    Fixed(LocalDate(2023, 1, 1), 1000.toBigDecimal()),
+    Fixed(name = "sample", date = LocalDate(2023, 1, 1), amount = 1000.toBigDecimal()),
     Monthly("ebmud", 5, (-100).toBigDecimal()),
     Monthly("pg&e", -5, (-200).toBigDecimal()),
     Monthly("income", 15, 1000.toBigDecimal()),
@@ -45,6 +45,6 @@ fun accumulateFlows(
   var runningTotal = startingBalance
   return cashFlow.sortedBy { it.date }.map {
     runningTotal += it.amount
-    Fixed(date = it.date, runningTotal)
+    Fixed(name = "FIXME-ACCUMULATED", date = it.date, amount = runningTotal)
   }
 }
