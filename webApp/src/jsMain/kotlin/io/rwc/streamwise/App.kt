@@ -18,7 +18,7 @@ class App(excludedFlowsNgSignal: dynamic) {
     flows: Array<CashFlow>,
     excluded: Set<CashFlow>,
   ): Array<Fixed> {
-    val startDate = LocalDate(2025, 9, 13)
+    val startDate = LocalDate(2026, 2, 14)
     val endDate = startDate.plus(DatePeriod(years = 2))
 
     val filtered = flows.filterNot { flow ->
