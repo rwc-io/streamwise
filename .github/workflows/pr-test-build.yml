@@ -33,7 +33,7 @@ jobs:
         run: ./gradlew :shared:build :server:build
 
       - name: Run server and shared tests
-        run: ./gradlew :shared:test :server:test
+        run: ./gradlew :shared:jsTest :server:test
 
       - name: Install webApp dependencies
         run: |
