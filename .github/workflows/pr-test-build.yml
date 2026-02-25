@@ -39,6 +39,8 @@ jobs:
           ./gradlew webApp:buildProductionWebApp
       - name: Validate Firestore rules
         run: |
+          echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_BASE64 }}" | base64 --decode > "google-application-credentials.json"
           firebase deploy --only firestore:rules --dry-run
+          rm -rf "google-application-credentials.json"
 
       # No deploy step for PRs
