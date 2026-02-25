@@ -11,7 +11,7 @@ class FixedTest {
     fun `test valueOn with matching date`() {
         val date = LocalDate(2023, 5, 15)
         val amount = BigDecimal.fromInt(1000)
-        val fixed = Fixed(date, amount)
+        val fixed = Fixed("test", date, amount)
         
         // Test with the same date
         assertEquals(amount, fixed.valueOn(date))
@@ -21,7 +21,7 @@ class FixedTest {
     fun `test valueOn with non-matching date`() {
         val date = LocalDate(2023, 5, 15)
         val amount = BigDecimal.fromInt(1000)
-        val fixed = Fixed(date, amount)
+        val fixed = Fixed("test", date, amount)
         
         // Test with a different date
         val differentDate = LocalDate(2023, 5, 16)
@@ -32,7 +32,7 @@ class FixedTest {
     fun `test valueOn with negative amount`() {
         val date = LocalDate(2023, 5, 15)
         val amount = BigDecimal.fromInt(-500)
-        val fixed = Fixed(date, amount)
+        val fixed = Fixed("test", date, amount)
         
         // Test with the same date
         assertEquals(amount, fixed.valueOn(date))
@@ -46,7 +46,7 @@ class FixedTest {
     fun `test valueOn with zero amount`() {
         val date = LocalDate(2023, 5, 15)
         val amount = BigDecimal.ZERO
-        val fixed = Fixed(date, amount)
+        val fixed = Fixed("test", date, amount)
         
         // Test with the same date
         assertEquals(amount, fixed.valueOn(date))
@@ -60,8 +60,8 @@ class FixedTest {
     fun `test data class equality`() {
         val date = LocalDate(2023, 5, 15)
         val amount = BigDecimal.fromInt(1000)
-        val fixed1 = Fixed(date, amount)
-        val fixed2 = Fixed(date, amount)
+        val fixed1 = Fixed("test", date, amount)
+        val fixed2 = Fixed("test", date, amount)
         
         // Test data class equality
         assertEquals(fixed1, fixed2)
