@@ -16,11 +16,10 @@ class BalanceChartComponent() {
   @Suppress("unused", "non_exportable_type")
   fun computeChartData(balances: Array<Fixed>): dynamic {
     return ChartData(
-      labels = balances.map { it.date.toString() }.toTypedArray(),
       datasets = arrayOf(
         ChartDataset(
           label = "Balance",
-          data = balances.map { it.amount.toStringExpanded() }.toTypedArray(),
+          data = balances.map { jsObjectOf("x" to it.date.toString(), "y" to it.amount.toStringExpanded().toFloat()) }.toTypedArray(),
           backgroundColor = "#4bc0c0ff",
           borderWidth = 1,
           fill = false,

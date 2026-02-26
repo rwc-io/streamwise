@@ -27,12 +27,14 @@ class ChartDataset(
 @OptIn(ExperimentalJsCollectionsApi::class, ExperimentalJsExport::class)
 @JsExport
 class ChartData(
-  @JsName("labels") val labels: Array<Any>,
   @JsName("datasets") val datasets: Array<ChartDataset>,
+  @JsName("labels") val labels: Array<Any> = arrayOf(),
 ) {
   fun toJs(): dynamic {
     val obj: dynamic = Any()
-    obj["labels"] = labels
+    if (labels.isNotEmpty()) {
+      obj["labels"] = labels
+    }
     obj["datasets"] = datasets.map { it.toJs() }.toTypedArray()
     return obj
   }
