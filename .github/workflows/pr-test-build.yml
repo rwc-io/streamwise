@@ -32,11 +32,6 @@ jobs:
         run: |
           npm install -g firebase-tools
           firebase --version
-      - name: Build shared and server modules
-        run: ./gradlew :shared:build :server:build
-      - name: Build Angular app
-        run: |
-          ./gradlew webApp:buildProductionWebApp
       - name: Validate Firestore rules
         run: |
           echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_BASE64 }}" | base64 --decode > "google-application-credentials.json"
@@ -44,5 +39,10 @@ jobs:
           rm -rf "google-application-credentials.json"
         env:
           GOOGLE_APPLICATION_CREDENTIALS: "google-application-credentials.json"
+      - name: Build shared and server modules
+        run: ./gradlew :shared:build :server:build
+      - name: Build Angular app
+        run: |
+          ./gradlew webApp:buildProductionWebApp
 
       # No deploy step for PRs
