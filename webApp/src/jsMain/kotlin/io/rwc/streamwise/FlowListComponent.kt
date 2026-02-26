@@ -1,8 +1,8 @@
 package io.rwc.streamwise
 
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
-import external.luxon.DateTime
-import external.luxon.toLocalDate
+import external.luxon.toKotlin
+import external.luxon.toLuxon
 import io.rwc.streamwise.flows.*
 import kangular.core.AngularWritable
 import kangular.external.MatDialog
@@ -55,7 +55,7 @@ class FlowListComponent(
   fun editFlow(flow: CashFlow) {
     if (flow is Fixed) {
       val formData = EditFixedFlowDialogData(
-        date = DateTime.fromISO(flow.date.toString()),
+        date = flow.date.toLuxon(),
         amount = flow.amount.toStringExpanded(),
       )
 
@@ -64,7 +64,7 @@ class FlowListComponent(
         if (result == null) return@subscribe
 
         val newFlow = flow.copy(
-          date = result.date.toLocalDate(),
+          date = result.date.toKotlin(),
           amount = BigDecimal.parseString(result.amount),
         )
 
