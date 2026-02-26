@@ -1,5 +1,5 @@
 [versions]
-angular = "20.1.4"
+angular = "21.1.5"
 bignum = "0.3.10"
 firebase-base="12.2.1"
 firebase-app="0.14.2"

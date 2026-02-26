@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, inject, signal} from '@angular/core';
-import {Field, form, required} from '@angular/forms/signals';
+import {FormField, form, required} from '@angular/forms/signals';
 import {MatError, MatFormField, MatHint, MatInput, MatInputModule, MatLabel} from "@angular/material/input";
 import {
   MAT_DIALOG_DATA,
@@ -18,7 +18,7 @@ import * as streamwise from '@streamwise';
   templateUrl: 'edit-fixed-flow-dialog.component.html',
   styleUrls: ['edit-flow-dialog.component.css'],
   imports: [
-    Field,
+    FormField,
     MatFormField,
     MatFormFieldModule,
     MatLabel,
