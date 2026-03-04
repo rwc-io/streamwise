@@ -6,10 +6,10 @@ external object MatDialog {
   fun <ResultType> open(component: dynamic, options: dynamic): MatDialogRef<ResultType>
 }
 
-external class MatDialogRef<T> {
+external interface MatDialogRef<T> {
   fun afterClosed(): MatDialogObservable<T>
 }
 
-external class MatDialogObservable<T> {
+external interface MatDialogObservable<T> {
   fun subscribe(listener: (T) -> Unit)
 }
